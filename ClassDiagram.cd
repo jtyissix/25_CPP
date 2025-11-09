@@ -1,0 +1,305 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="FallingController" Collapsed="true">
+    <Position X="53.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAJAAgGAgCIAgAAAAAAABAAAAEIBAIQAQABEBAAACAA=</HashCode>
+      <FileName>src\fallingcontroller\fallingcontroller.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Armor" Collapsed="true">
+    <Position X="26.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAACAAGgSEAAQAAAAIAAAAAAAQAIriAEAEBIwAAAAA=</HashCode>
+      <FileName>src\items\armors\Armor.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BulletArmor" Collapsed="true">
+    <Position X="20.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAIAAAAAAAAAAAAQAEAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>src\items\armors\BulletArmor.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NormalArmor" Collapsed="true">
+    <Position X="32.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>src\items\armors\NormalArmor.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Character" Collapsed="true">
+    <Position X="50" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>GAAkBgiLGaCiJbwJAAJAQLCBGAAAhZqmoBTCJBMWK2g=</HashCode>
+      <FileName>src\items\characters\Character.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Link" Collapsed="true">
+    <Position X="49" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgAAAAAAAABAAAAAAAAAAAAQAAAAgA=</HashCode>
+      <FileName>src\items\characters\Link.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Link2" Collapsed="true">
+    <Position X="51.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgAAAAAAAABAAAAAAAAAAAAAAABAgA=</HashCode>
+      <FileName>src\items\characters\link2.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Bandage" Collapsed="true">
+    <Position X="31.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAAAAAAAAAAACAQAAAAAAAAAAAAAAIA=</HashCode>
+      <FileName>src\items\drugs\bandage.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Drug" Collapsed="true">
+    <Position X="26.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACABGgSMAAQAAAAIAAAAAAAQAIriAEAEBIQAAAAA=</HashCode>
+      <FileName>src\items\drugs\drug.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MedBag" Collapsed="true">
+    <Position X="21.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAAAAAAAAAAACAQAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>src\items\drugs\medbag.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Medical" Collapsed="true">
+    <Position X="29.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAAAAAAAAAAACAQAAAAAAAAAABAAAAA=</HashCode>
+      <FileName>src\items\drugs\medical.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Fallable" Collapsed="true">
+    <Position X="15.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>src\items\fallable.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Figure" Collapsed="true">
+    <Position X="29.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAAAAAAAAAAAAAQAEAAAAAAAAAAAAAA=</HashCode>
+      <FileName>src\items\figure\Figure.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FigureA" Collapsed="true">
+    <Position X="40.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAA=</HashCode>
+      <FileName>src\items\figure\FigureA.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Figurea_hand" Collapsed="true">
+    <Position X="43" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>src\items\figure\figurea_hand.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FigureA_KneeDown" Collapsed="true">
+    <Position X="18.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>src\items\figure\figurea_kneedown.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FigureB" Collapsed="true">
+    <Position X="34" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>src\items\figure\figureb.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Figureb_hand" Collapsed="true">
+    <Position X="36.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAEAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>src\items\figure\figureb_hand.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FigureB_KneeDown" Collapsed="true">
+    <Position X="38.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAIAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>src\items\figure\figureb_kneedown.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Item" Collapsed="true">
+    <Position X="26.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABgAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>src\items\Item.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Battlefield" Collapsed="true">
+    <Position X="37.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>src\items\maps\Battlefield.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Grass" Collapsed="true">
+    <Position X="23.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAIAAIAAAABAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>src\items\maps\grass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ice" Collapsed="true">
+    <Position X="23.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAABAAAAAAAQAAAAAAAAAAAEAQAA=</HashCode>
+      <FileName>src\items\maps\ice.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Map" Collapsed="true">
+    <Position X="37.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAEABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>src\items\maps\Map.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mountable" Collapsed="true">
+    <Position X="15.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AggAAAAAAAAAAQAAAAAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>src\items\Mountable.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ball" Collapsed="true">
+    <Position X="23.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CEAEAAAAgQAABAAAAAAAAAAAAAQAAIAAAATAAAAAAIA=</HashCode>
+      <FileName>src\items\weapons\ball.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BallHand" Collapsed="true">
+    <Position X="40.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAACAAAAIAAEACCIUAAACAAAAAAQAAAIE=</HashCode>
+      <FileName>src\items\weapons\ballhand.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Bullet" Collapsed="true">
+    <Position X="26.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAEAAAAgAAABAAAAAAAAAAAAAQAAIAAAATAAAAQAAA=</HashCode>
+      <FileName>src\items\weapons\bullet.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Knife" Collapsed="true">
+    <Position X="42.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAEEAAAAACAAAAIAAAFCCAQAAACAAAAAAQAAAIA=</HashCode>
+      <FileName>src\items\weapons\knife.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rifle" Collapsed="true">
+    <Position X="18" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQEAAAAAACAAAAIAAAACCAUAAACAAAAAAQAAAIE=</HashCode>
+      <FileName>src\items\weapons\Rifle.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sniper" Collapsed="true">
+    <Position X="35.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAACAAAAIAAAASCAUAAACAAAAAAQAAAIE=</HashCode>
+      <FileName>src\items\weapons\sniper.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Weapon" Collapsed="true">
+    <Position X="29.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAGgSEAAQAAAAIAAAAAAAQAIriAEAkBIQAAAAA=</HashCode>
+      <FileName>src\items\weapons\Weapon.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MyGame" Collapsed="true">
+    <Position X="57.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAQCAQAAAAAA=</HashCode>
+      <FileName>src\MyGame.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BattleScene" Collapsed="true">
+    <Position X="0.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AKIMEKAIRAAqQAAQoQCwICGRAAIoikAhQAAgAAoBIAA=</HashCode>
+      <FileName>src\scenes\BattleScene.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Platform" Collapsed="true">
+    <Position X="53.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAIAAEAAAAAAEAAAAAAAAAiEAAQAAAAAA=</HashCode>
+      <FileName>src\scenes\Platform.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Scene" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQEAAAAACEAAAAAgAAAAiAAAAIAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>src\scenes\Scene.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HealthBar" Collapsed="true">
+    <Position X="55.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABBAAAAAABAAAEARAACAAABCABAEEAAAABAAEAEQAAA=</HashCode>
+      <FileName>src\ui\HealthBar.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="`anonymous-namespace'::initializer" Collapsed="true">
+    <Position X="53.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAEA=</HashCode>
+      <FileName>build\desktop_qt_6_5_3_mingw_64_bit-release\qt_programming_2024_autogen\gbfafxfcvo\qrc_assets.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="`anonymous-namespace'::qt_meta_stringdata_CLASSBattleSceneENDCLASS_t" Collapsed="true">
+    <Position X="55.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAEAgAAIAAAQQAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>build\desktop_qt_6_5_3_mingw_64_bit-release\qt_programming_2024_autogen\sne2vj5fqv\moc_BattleScene.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="`anonymous-namespace'::qt_meta_stringdata_CLASSSceneENDCLASS_t" Collapsed="true">
+    <Position X="55.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAIAAAQQAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>build\desktop_qt_6_5_3_mingw_64_bit-release\qt_programming_2024_autogen\sne2vj5fqv\moc_Scene.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="`anonymous-namespace'::qt_meta_stringdata_CLASSMyGameENDCLASS_t" Collapsed="true">
+    <Position X="53.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAgAAIAAAQQAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>build\desktop_qt_6_5_3_mingw_64_bit-release\qt_programming_2024_autogen\uvladie3jm\moc_MyGame.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="`anonymous-namespace'::qt_meta_stringdata_CLASSFallingControllerENDCLASS_t" Collapsed="true">
+    <Position X="57.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAgAAIAAAQQAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>build\desktop_qt_6_5_3_mingw_64_bit-release\qt_programming_2024_autogen\uyvgo2b5fg\moc_fallingcontroller.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="`anonymous-namespace'::qt_meta_stringdata_CLASSWeaponENDCLASS_t" Collapsed="true">
+    <Position X="57.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAQAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>build\desktop_qt_6_5_3_mingw_64_bit-debug\qt_programming_2024_autogen\z3urefiw6b\moc_Weapon.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Font Name="Microsoft YaHei UI" Size="9" />
+</ClassDiagram>

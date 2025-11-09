@@ -1,0 +1,24 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Items/Armors/FlamebreakerArmor/BotW_Flamebreaker_Armor_Icon.png</file>
+        <file>Items/Maps/Battlefield/g9tOqth.png</file>
+        <file>Items/Maps/Battlefield/soil.png</file>
+        <file>Items/Characters/character_malePerson_attack0.png</file>
+        <file>Items/Characters/character_malePerson_duck.png</file>
+        <file>Items/Characters/character_malePerson_side.png</file>
+        <file>Items/Characters/soldier_duck.png</file>
+        <file>Items/Characters/soldier_hold1.png</file>
+        <file>Items/Characters/soldier_idle.png</file>
+        <file>Items/Weapons/02.png</file>
+        <file>Items/Weapons/sniper2.png</file>
+        <file>Items/Weapons/bullet1.png</file>
+        <file>Items/Weapons/bullet4.png</file>
+        <file>Items/Weapons/messer.png</file>
+        <file>Items/Drugs/bandage_32x32.png</file>
+        <file>Items/Drugs/first_aid_kit_32x32.png</file>
+        <file>Items/Drugs/pill_32x32.png</file>
+        <file>Items/Armors/OldShirt/BotW_Old_Shirt_Icon.png</file>
+        <file>Items/bush.svg</file>
+        <file>Items/icleblock.svg</file>
+    </qresource>
+</RCC>
