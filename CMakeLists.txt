@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.28)
-project(qt_programming_2024)
+project(25_CPP)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_AUTOMOC ON)
@@ -15,7 +15,7 @@ find_package(Qt6 COMPONENTS
         REQUIRED)
 find_package(Qt6 REQUIRED COMPONENTS Core)
 
-add_executable(qt_programming_2024 src/main.cpp
+add_executable(${PROJECT_NAME} src/main.cpp
         src/MyGame.cpp
         src/MyGame.h
         src/Items/Item.cpp
@@ -84,13 +84,13 @@ add_executable(qt_programming_2024 src/main.cpp
         src/Items/Maps/grass.h src/Items/Maps/grass.cpp
         src/Items/Maps/ice.h src/Items/Maps/ice.cpp
         )
-target_link_libraries(qt_programming_2024
+target_link_libraries(${PROJECT_NAME}
         Qt::Core
         Qt::Gui
         Qt::Widgets
 )
 if(WIN32)
-    set_target_properties(qt_programming_2024 PROPERTIES
+    set_target_properties(${PROJECT_NAME} PROPERTIES
         WIN32_EXECUTABLE TRUE
     )
 endif()
