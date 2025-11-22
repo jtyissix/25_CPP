@@ -1,5 +1,0 @@
-E:/vs_qt/25_cpp/25_CPP/build/Desktop_Qt_6_5_3_MinGW_64_bit-Debug/CMakeFiles/25_CPP.dir
-E:/vs_qt/25_cpp/25_CPP/build/Desktop_Qt_6_5_3_MinGW_64_bit-Debug/CMakeFiles/edit_cache.dir
-E:/vs_qt/25_cpp/25_CPP/build/Desktop_Qt_6_5_3_MinGW_64_bit-Debug/CMakeFiles/rebuild_cache.dir
-E:/vs_qt/25_cpp/25_CPP/build/Desktop_Qt_6_5_3_MinGW_64_bit-Debug/CMakeFiles/25_CPP_autogen_timestamp_deps.dir
-E:/vs_qt/25_cpp/25_CPP/build/Desktop_Qt_6_5_3_MinGW_64_bit-Debug/CMakeFiles/25_CPP_autogen.dir
