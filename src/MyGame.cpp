@@ -90,8 +90,13 @@ void MyGame::restartGame() {
     // 延迟删除旧窗口 bug:deletelater ram leak
     if (oldInstance) {
         QTimer::singleShot(500, [oldInstance]() {
-            oldInstance->close();
+            //oldInstance->close();
             //oldInstance->deleteLater();
         });
     }
+}
+
+void MyGame::closeEvent(QCloseEvent *event) {
+    emit windowClosed();
+    event->accept();
 }

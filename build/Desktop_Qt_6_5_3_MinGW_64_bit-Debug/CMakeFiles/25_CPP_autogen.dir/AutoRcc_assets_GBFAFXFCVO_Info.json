@@ -11,9 +11,11 @@
 	[
 		"E:/vs_qt/25_cpp/25_CPP/assets/Items/icleblock.svg",
 		"E:/vs_qt/25_cpp/25_CPP/assets/Items/bush.svg",
+		"E:/vs_qt/25_cpp/25_CPP/assets/Items/a5_icon.png",
 		"E:/vs_qt/25_cpp/25_CPP/assets/Items/Drugs/first_aid_kit_32x32.png",
 		"E:/vs_qt/25_cpp/25_CPP/assets/Items/Drugs/pill_32x32.png",
 		"E:/vs_qt/25_cpp/25_CPP/assets/Items/Drugs/bandage_32x32.png",
+		"E:/vs_qt/25_cpp/25_CPP/assets/Items/music/SkyHigh.mp3",
 		"E:/vs_qt/25_cpp/25_CPP/assets/Items/Armors/FlamebreakerArmor/BotW_Flamebreaker_Armor_Icon.png",
 		"E:/vs_qt/25_cpp/25_CPP/assets/Items/Armors/OldShirt/BotW_Old_Shirt_Icon.png",
 		"E:/vs_qt/25_cpp/25_CPP/assets/Items/Weapons/02.png",
@@ -28,7 +30,8 @@
 		"E:/vs_qt/25_cpp/25_CPP/assets/Items/Characters/soldier_hold1.png",
 		"E:/vs_qt/25_cpp/25_CPP/assets/Items/Characters/character_malePerson_attack0.png",
 		"E:/vs_qt/25_cpp/25_CPP/assets/Items/Maps/Battlefield/g9tOqth.png",
-		"E:/vs_qt/25_cpp/25_CPP/assets/Items/Maps/Battlefield/soil.png"
+		"E:/vs_qt/25_cpp/25_CPP/assets/Items/Maps/Battlefield/soil.png",
+		"E:/vs_qt/25_cpp/25_CPP/assets/Items/background/bg2.jpg"
 	],
 	"LOCK_FILE" : "E:/vs_qt/25_cpp/25_CPP/build/Desktop_Qt_6_5_3_MinGW_64_bit-Debug/CMakeFiles/25_CPP_autogen.dir/AutoRcc_assets_GBFAFXFCVO_Lock.lock",
 	"MULTI_CONFIG" : false,

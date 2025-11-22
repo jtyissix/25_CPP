@@ -14,8 +14,12 @@ find_package(Qt6 COMPONENTS
         Widgets
         REQUIRED)
 find_package(Qt6 REQUIRED COMPONENTS Core)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Multimedia)
 
 add_executable(${PROJECT_NAME} src/main.cpp
+        src/Intro.cpp
+        src/Intro.h
+        src/GameProgress.h
         src/MyGame.cpp
         src/MyGame.h
         src/Items/Item.cpp
@@ -88,6 +92,7 @@ target_link_libraries(${PROJECT_NAME}
         Qt::Core
         Qt::Gui
         Qt::Widgets
+        Qt::Multimedia
 )
 if(WIN32)
     set_target_properties(${PROJECT_NAME} PROPERTIES

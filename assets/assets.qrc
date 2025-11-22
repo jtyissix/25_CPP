@@ -20,5 +20,8 @@
         <file>Items/Armors/OldShirt/BotW_Old_Shirt_Icon.png</file>
         <file>Items/bush.svg</file>
         <file>Items/icleblock.svg</file>
+        <file>Items/background/bg2.jpg</file>
+        <file>Items/music/SkyHigh.mp3</file>
+        <file>Items/a5_icon.png</file>
     </qresource>
 </RCC>

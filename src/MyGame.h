@@ -17,6 +17,11 @@ class MyGame : public QMainWindow
 public:
     explicit MyGame(QWidget *parent = nullptr);
     static void restartGame();
+signals:
+    void windowClosed();
+
+protected:
+    void closeEvent(QCloseEvent *event) override;
 private slots:
     void onGameOver(const QString& winner);
 private:
