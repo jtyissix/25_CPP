@@ -148,8 +148,8 @@ void Character::processInput() {
         setJumpDown(false);
     }
     //processAttack();
-    processJump();
-    applyGravity();
+    //processJump();
+    //applyGravity();
     auto velocity = getVelocity();
     double moveSpeed = 0.3;
     if(getIsPill()){
@@ -171,6 +171,7 @@ void Character::processInput() {
         moveSpeed+=ICE_SPEEDUP;
     }
     velocity.setX(0);
+    velocity.setY(0);
     if (isLeftDown()) {
         velocity.setX(- moveSpeed);
 
@@ -180,7 +181,17 @@ void Character::processInput() {
         velocity.setX(+ moveSpeed);
     }
 
+    if (isLeftDown()) {
+        velocity.setX(- moveSpeed);
 
+    }
+
+    if (isUp()) {
+        velocity.setY(- moveSpeed);
+    }
+    if (isDown()) {
+        velocity.setY(+ moveSpeed);
+    }
 
     if (!lastPickDown && pickDown) { // first time pickDown
         picking = true;
@@ -218,7 +229,7 @@ void Character::processInput() {
     }
     */
     setVelocity(velocity);
-    updateVisibility();
+    //updateVisibility();
 
 }
 

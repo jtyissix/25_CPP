@@ -26,7 +26,7 @@ public:
         // Its pixmapItem is automatically handled by children's paint()
     }
 
-protected:
+
     QGraphicsPixmapItem *pixmapItem{};
 };
 

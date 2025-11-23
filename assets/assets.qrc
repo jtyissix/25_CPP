@@ -23,5 +23,7 @@
         <file>Items/background/bg2.jpg</file>
         <file>Items/music/SkyHigh.mp3</file>
         <file>Items/a5_icon.png</file>
+        <file>Items/background/bg1.jpg</file>
+        <file>Items/Characters/Fish2.bmp</file>
     </qresource>
 </RCC>

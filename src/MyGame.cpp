@@ -1,6 +1,5 @@
-//
-// Created by gerw on 8/20/24.
-//
+#include <QTimer>
+#include <QLabel>
 #include "MyGame.h"
 #include "Scenes/BattleScene.h"
 MyGame* MyGame::currentInstance = nullptr;
@@ -8,6 +7,9 @@ MyGame::MyGame(QWidget *parent)
     : QMainWindow(parent)
 {
     currentInstance = this;
+    if (parent && parent->inherits("Intro")) {
+        parentIntro = parent;
+    }
     battleScene = new BattleScene(this);
     view = new QGraphicsView(this);
     view->setScene(battleScene);
@@ -20,6 +22,7 @@ MyGame::MyGame(QWidget *parent)
     // Adjust the QMainWindow size to tightly wrap the QGraphicsView
     setFixedSize(view->sizeHint());
     battleScene->startLoop();
+    createPauseDialog();
 }
 
 void MyGame::onGameOver(const QString& winner) {
@@ -99,4 +102,118 @@ void MyGame::restartGame() {
 void MyGame::closeEvent(QCloseEvent *event) {
     emit windowClosed();
     event->accept();
+}
+
+// 创建暂停对话框
+void MyGame::createPauseDialog() {
+    pauseDialog = new QDialog(this);
+    pauseDialog->setWindowTitle("游戏暂停");
+    pauseDialog->setModal(true);
+    pauseDialog->setFixedSize(300, 300);
+
+    // 设置对话框样式
+    pauseDialog->setStyleSheet(
+        "QDialog {"
+        "    background-color: rgba(30, 144, 255, 180);"
+        "    border-radius: 20px;"
+        "}"
+        );
+
+    QVBoxLayout* layout = new QVBoxLayout(pauseDialog);
+    layout->setSpacing(20);
+    layout->setContentsMargins(40, 50, 40, 50);
+
+    // 标题标签
+    QLabel* titleLabel = new QLabel("游戏暂停", pauseDialog);
+    titleLabel->setAlignment(Qt::AlignCenter);
+    titleLabel->setStyleSheet(
+        "QLabel {"
+        "    color: white;"
+        "    font-size: 24px;"
+        "    font-weight: bold;"
+        "    background: transparent;"
+        "}"
+        );
+    layout->addWidget(titleLabel);
+
+    layout->addSpacing(20);
+
+    // 继续游戏按钮
+    QPushButton* continueBtn = createCapsuleButton("继续游戏", QColor(76, 175, 80));
+    connect(continueBtn, &QPushButton::clicked, pauseDialog, &QDialog::accept);
+    layout->addWidget(continueBtn);
+
+    // 重新开始按钮
+    QPushButton* restartBtn = createCapsuleButton("重新开始", QColor(255, 152, 0));
+    connect(restartBtn, &QPushButton::clicked, this, [this]() {
+        pauseDialog->accept();
+        hide();
+        MyGame::restartGame();
+    });
+    layout->addWidget(restartBtn);
+
+    // 退出到主界面按钮
+    QPushButton* exitBtn = createCapsuleButton("退出到主界面", QColor(244, 67, 54));
+    connect(exitBtn, &QPushButton::clicked, this, [this]() {
+        pauseDialog->accept();
+        close();  // 这会触发 windowClosed 信号
+    });
+    layout->addWidget(exitBtn);
+
+    layout->addStretch();
+
+    pauseDialog->setLayout(layout);
+}
+
+// 创建胶囊形状按钮
+QPushButton* MyGame::createCapsuleButton(const QString& text, const QColor& color) {
+    QPushButton* button = new QPushButton(text);
+    button->setFixedSize(220, 50);
+    button->setCursor(Qt::PointingHandCursor);
+
+    QString styleSheet = QString(
+                             "QPushButton {"
+                             "    background-color: %1;"
+                             "    color: white;"
+                             "    border: none;"
+                             "    border-radius: 25px;"
+                             "    font-size: 16px;"
+                             "    font-weight: bold;"
+                             "    padding: 10px;"
+                             "}"
+                             "QPushButton:hover {"
+                             "    background-color: %2;"
+                             "}"
+                             "QPushButton:pressed {"
+                             "    background-color: %3;"
+                             "}"
+                             ).arg(color.name())
+                             .arg(color.lighter(110).name())
+                             .arg(color.darker(110).name());
+
+    button->setStyleSheet(styleSheet);
+    return button;
+}
+
+// 显示暂停菜单
+void MyGame::showPauseMenu() {
+    if (battleScene) {
+        battleScene->stopAllTimers();  // 停止游戏循环
+    }
+
+    // 显示对话框（阻塞）
+    int result = pauseDialog->exec();
+
+    // 如果点击继续游戏或关闭对话框
+    if (result == QDialog::Accepted && battleScene) {
+        battleScene->startLoop();  // 恢复游戏循环
+    }
+}
+
+void MyGame::keyPressEvent(QKeyEvent *event) {
+    if (event->key() == Qt::Key_Escape) {
+        showPauseMenu();
+    } else {
+        QMainWindow::keyPressEvent(event);
+    }
 }

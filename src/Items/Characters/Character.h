@@ -43,6 +43,14 @@ public:
 
     [[nodiscard]] bool isRightDown() const;
 
+    void setUp(bool setUp){Character::up=setUp;}
+
+    [[nodiscard]] bool isUp() {return Character::up;}
+
+    void setDown(bool setDown){Character::down=setDown;}
+
+    [[nodiscard]] bool isDown() {return Character::down;}
+
     void setRightDown(bool rightDown);
 
     [[nodiscard]] bool isPickDown() const;
@@ -132,6 +140,7 @@ protected:
 //    QGraphicsEllipseItem *ellipseItem; // for debugging
 private:
     bool leftDown{}, rightDown{}, pickDown{};
+    bool up{},down{};
     bool lastPickDown{};
     bool picking{};
     bool kneeDown{};

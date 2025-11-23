@@ -5,6 +5,7 @@
 
 #include <QDateTime>
 #include "BattleScene.h"
+#include "../Items/Characters/myfish.h"
 #include "../Items/Characters/Link.h"
 #include "../Items/Maps/Battlefield.h"
 #include "../Items/Characters/link2.h"
@@ -15,32 +16,34 @@
 #include "../Items/Maps/ice.h"
 #include <QTimer>
 BattleScene::BattleScene(QObject *parent) : Scene(parent)
-    , player1HealthBar(nullptr)
-    , player2HealthBar(nullptr)
+    /*, player1HealthBar(nullptr)
+    , player2HealthBar(nullptr)*/
     , gameEnded(false){
     // This is useful if you want the scene to have the exact same dimensions as the view
-    setSceneRect(0, 0, 1280, 720);
+    setSceneRect(0, 0, 1180, 640);
     map = new Battlefield();
-    character = new Link();
-    character->id=1;
-    character->setDirection(true);//initially facing right
-    character2 = new Link2();
-    character2->id=2;
-    character2->setDirection(false);//initially facing left
+    myfish=new MyFish();
+    //character = new Link();
+    //character->id=1;
+    //character->setDirection(true);//initially facing right
+    //character2 = new Link2();
+    //character2->id=2;
+    //character2->setDirection(false);//initially facing left
     //spareArmor = new FlamebreakerArmor();
     addItem(map);
-    createGrass();
-    createIce();
-    addItem(character);
-    addItem(character2);
+    addItem(myfish);
+    //createGrass();
+    //createIce();
+    //addItem(character);
+    //addItem(character2);
     //addItem(spareArmor);
     map->scaleToFitScene(this);
-    character->setPos(sceneRect().left(),map->getFloorHeight());
-    character2->setPos(sceneRect().right()-150,map->getFloorHeight());
+    myfish->setPos(sceneRect().left(),map->getFloorHeight());
+    //character2->setPos(sceneRect().right()-150,map->getFloorHeight());
     //spareArmor->unmount();
     //spareArmor->setPos(sceneRect().left() + (sceneRect().right() - sceneRect().left()) *0.75, map->getFloorHeight());
-    setupHealthBars();
-    createPlatforms();
+    //setupHealthBars();
+    //createPlatforms();
     //setup falling controller
     fallingController = new FallingController();
     fallingController->setScene(this);
@@ -92,181 +95,249 @@ void BattleScene::createIce(){
 }
 void BattleScene::processInput() {
     Scene::processInput();
+    if(myfish!=nullptr){
+        myfish->processInput();
+    }
+    /*
     if (character != nullptr) {
-        character->processInput();
+        //character->processInput();
     }
     if (character2 != nullptr) {
-        character2->processInput();
-    }
+        //character2->processInput();
+    }*/
 }
 
 void BattleScene::keyPressEvent(QKeyEvent *event) {
     switch (event->key()) {
+        /*
         case Qt::Key_1:
             if (character != nullptr) {
-                character->setLeftDown(true);
-                character->setDirection(false);
+                //character->setLeftDown(true);
+                //character->setDirection(false);
             }
             break;
         case Qt::Key_2:
             if (character != nullptr) {
-                character->setRightDown(true);
-                character->setDirection(true);
+                //character->setRightDown(true);
+                //character->setDirection(true);
             }
             break;
         case Qt::Key_3:
             if (character != nullptr) {
-                character->setJumpDown(true);
+                //character->setJumpDown(true);
                 //qDebug()<<'c';
             }
             break;
         case Qt::Key_4:
             if (character!= nullptr) {
-                character->setKneeDown(true);
+                //character->setKneeDown(true);
             }
             break;
         case Qt::Key_5:
             if (character!= nullptr) {
-                character->setAttack(true);
+                //character->setAttack(true);
 
             }
             break;
         case Qt::Key_6:
             if (character!= nullptr) {
-                character->setPickDown(true);
+                //character->setPickDown(true);
 
             }
             break;
         case Qt::Key_Left:
             if (character2 != nullptr) {
-                character2->setLeftDown(true);
-                character2->setDirection(false);
+                //character2->setLeftDown(true);
+                //character2->setDirection(false);
             }
             break;
         case Qt::Key_Right:
             if (character2 != nullptr) {
-                character2->setRightDown(true);
-                character2->setDirection(true);
+                //character2->setRightDown(true);
+                //character2->setDirection(true);
             }
             break;
         case Qt::Key_Up:
             if (character2 != nullptr) {
-                character2->setJumpDown(true);
+                //character2->setJumpDown(true);
 
             }
             break;
         case Qt::Key_Down:
             if (character2!= nullptr) {
-                character2->setKneeDown(true);
+                //character2->setKneeDown(true);
             }
             break;
         case Qt::Key_Space:
             if (character2!= nullptr) {
-                character2->setAttack(true);
+                //character2->setAttack(true);
             }
             break;
         case Qt::Key_Shift:
             if (character2!= nullptr) {
-                character2->setPickDown(true);
+                //character2->setPickDown(true);
 
             }
             break;
         default:
             Scene::keyPressEvent(event);
+*/
+    case Qt::Key_Left:
+        if (myfish != nullptr) {
+            myfish->setLeftDown(true);
+            myfish->setDirection(false);
+        }
+        break;
+    case Qt::Key_Right:
+        if (myfish != nullptr) {
+            myfish->setRightDown(true);
+            myfish->setDirection(true);
+        }
+        break;
+    case Qt::Key_Up:
+        if (myfish != nullptr) {
+            //character2->setJumpDown(true);
+            myfish->setUp(true);
+        }
+        break;
+    case Qt::Key_Down:
+        if (myfish!= nullptr) {
+            //character2->setKneeDown(true);
+            myfish->setDown(true);
+        }
+        break;
+    default:
+        Scene::keyPressEvent(event);
     }
 }
 
 void BattleScene::keyReleaseEvent(QKeyEvent *event) {
     switch (event->key()) {
+    case Qt::Key_Left:
+        if (myfish != nullptr) {
+            myfish->setLeftDown(false);
+
+        }
+        break;
+    case Qt::Key_Right:
+        if (myfish != nullptr) {
+            myfish->setRightDown(false);
+
+        }
+        break;
+    case Qt::Key_Up:
+        if (myfish != nullptr) {
+            //character2->setJumpDown(true);
+            myfish->setUp(false);
+        }
+        break;
+    case Qt::Key_Down:
+        if (myfish!= nullptr) {
+            //character2->setKneeDown(true);
+            myfish->setDown(false);
+        }
+        break;
+    default:
+        Scene::keyPressEvent(event);
+    }
+    /*
+    switch (event->key()) {
+
         case Qt::Key_1:
             if (character != nullptr) {
-                character->setLeftDown(false);
+                //character->setLeftDown(false);
             }
             break;
         case Qt::Key_2:
             if (character != nullptr) {
-                character->setRightDown(false);
+                //character->setRightDown(false);
             }
             break;
         case Qt::Key_3:
             if (character != nullptr) {
-                character->setJumpDown(false);
+                //character->setJumpDown(false);
             }
             break;
         case Qt::Key_4:
             if (character!= nullptr) {
-                character->setKneeDown(false);
+                //character->setKneeDown(false);
             }
             break;
         case Qt::Key_5:
             if (character!= nullptr) {
-                character->setAttack(false);
+                //character->setAttack(false);
 
             }
             break;
         case Qt::Key_6:
             if (character!= nullptr) {
-                character->setPickDown(false);
+                //character->setPickDown(false);
 
             }
             break;
         case Qt::Key_Left:
             if (character2 != nullptr) {
-                character2->setLeftDown(false);
+                //character2->setLeftDown(false);
             }
             break;
         case Qt::Key_Right:
             if (character2 != nullptr) {
-                character2->setRightDown(false);
+                //character2->setRightDown(false);
             }
             break;
         case Qt::Key_Up:
             if (character2 != nullptr) {
-                character2->setJumpDown(false);
+                //character2->setJumpDown(false);
 
             }
             break;
         case Qt::Key_Down:
             if (character2!= nullptr) {
-                character2->setKneeDown(false);
+                //character2->setKneeDown(false);
             }
             break;
         case Qt::Key_Space:
             if (character2!= nullptr) {
-                character2->setAttack(false);
+                //character2->setAttack(false);
             }
             break;
         case Qt::Key_Shift:
             if (character2!= nullptr) {
-                character2->setPickDown(false);
+                //character2->setPickDown(false);
 
             }
             break;
         default:
             Scene::keyReleaseEvent(event);
+
     }
+*/
 }
 //no use function
 void BattleScene::processPhysics() {
+/*
     if (character != nullptr) {
         // 处理跳跃逻辑
-        character->processJump();
+        //character->processJump();
 
         // 应用重力
-        character->applyGravity();
+        //character->applyGravity();
     }
+    */
 }
 
 void BattleScene::update() {
     if (gameEnded) {
         return;
     }
+    /*
     if (!character || !character2) {
 
         return;
-    }
+    }*/
     Scene::update();
     // 处理战斗逻辑
+    /*
     processCombat();
     // 更新血条显示
     updateHealthBars();
@@ -284,49 +355,53 @@ void BattleScene::update() {
     checkGameOver();
     // 处理物理更新
     //processPhysics();
+*/
 }
-/*
- *
+
 void BattleScene::processMovement() {
     Scene::processMovement();
-    if (character != nullptr) {
-        QPointF oldPos = character->pos();
+    if (myfish != nullptr) {
+        QPointF oldPos = myfish->pos();
 
         // 应用速度
-        QPointF newPos = character->pos() + character->getVelocity() * (double) deltaTime;
+        QPointF newPos = myfish->pos() + myfish->getVelocity() * (double) deltaTime;
         // 边界检测 - 防止角色移出场景
         if (newPos.x() < map->boundingRect().left()) {
             newPos.setX( map->boundingRect().left());
             // 停止水平移动
-            QPointF vel = character->getVelocity();
+            QPointF vel = myfish->getVelocity();
             vel.setX(0);
-            character->setVelocity(vel);
-        } else if (newPos.x() > map->boundingRect().right()) {
-            newPos.setX(map->boundingRect().right());
+            myfish->setVelocity(vel);
+        } else if (newPos.x()+64 > map->boundingRect().right()) {
+            newPos.setX(map->boundingRect().right()-64);
             // 停止水平移动
-            QPointF vel = character->getVelocity();
+            QPointF vel = myfish->getVelocity();
             vel.setX(0);
-            character->setVelocity(vel);
+            myfish->setVelocity(vel);
         }
 
         // 地面检测
-
-        qreal groundLevel = map->getFloorHeight();
-
-        if (newPos.y() >= groundLevel) {
-            newPos.setY(groundLevel);
-            character->setIsOnGround(true);
-            // 如果着地，停止垂直移动
-            QPointF vel = character->getVelocity();
+        int fishHeight=64;
+        if (newPos.y() < map->boundingRect().top()) {
+            newPos.setY(map->boundingRect().top());
+            QPointF vel = myfish->getVelocity();
             vel.setY(0);
-            character->setVelocity(vel);
+            myfish->setVelocity(vel);
+        }
+        // 下边界检测 - 让鱼的底部贴边，而不是锚点贴边
+        else if (newPos.y() + fishHeight > map->boundingRect().bottom()) {
+            newPos.setY(map->boundingRect().bottom() - fishHeight);
+            myfish->setIsOnGround(true);
+            QPointF vel = myfish->getVelocity();
+            vel.setY(0);
+            myfish->setVelocity(vel);
         } else {
-            character->setIsOnGround(false);
+            myfish->setIsOnGround(false);
         }
 
-        character->setPos(newPos);
+        myfish->setPos(newPos);
     }
-
+    /*
     if (character2 != nullptr) {
         QPointF oldPos = character2->pos();
 
@@ -364,12 +439,14 @@ void BattleScene::processMovement() {
 
         character2->setPos(newPos);
     }
-
+*/
     if (fallingController != nullptr) {
         fallingController->processMovement();
     }
+
 }
-*/
+
+/*
 void BattleScene::processMovement() {
     Scene::processMovement();
 
@@ -384,8 +461,9 @@ void BattleScene::processMovement() {
     if (fallingController != nullptr) {
         fallingController->processMovement();
     }
-}
 
+}*/
+/*
 // 角色移动处理
 void BattleScene::processCharacterMovement(Character* character) {
     if (!character) return;
@@ -1041,4 +1119,4 @@ bool BattleScene::isCharacterInAnyIce(Character* character) {
     return false;
 }
 
-
+*/

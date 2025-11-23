@@ -87,6 +87,9 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/Scenes/Platform.cpp
         src/Items/Maps/grass.h src/Items/Maps/grass.cpp
         src/Items/Maps/ice.h src/Items/Maps/ice.cpp
+        src/Items/Characters/myfish.h src/Items/Characters/myfish.cpp
+        src/Items/Figure/myfishfig.h src/Items/Figure/myfishfig.cpp
+        src/Items/Characters/smallfish.h src/Items/Characters/smallfish.cpp
         )
 target_link_libraries(${PROJECT_NAME}
         Qt::Core

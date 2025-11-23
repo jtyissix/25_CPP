@@ -29,8 +29,8 @@ public:
 
     void processMovement() override;
 
-    void processPicking() override;
-
+    //void processPicking() override;
+    //void stopAllTimers();
     void processPhysics();
 
     void processCombat();
@@ -60,7 +60,7 @@ private:
     QList<Ice*> iceList;
     void checkIceSpeedUp();
     bool isCharacterInAnyIce(Character* character);
-    void stopAllTimers();
+
     Weapon *findNearestUnmountedWeapon(const QPointF &pos, qreal distance_threshold = std::numeric_limits<qreal>::max());
     Drug *findNearestUnmountedDrug(const QPointF &pos, qreal distance_threshold = std::numeric_limits<qreal>::max());
     Armor *findNearestUnmountedArmor(const QPointF &pos, qreal distance_threshold = std::numeric_limits<qreal>::max());
@@ -81,6 +81,7 @@ private:
     Map *map;
     Character *character;
     Character *character2;
+    Character *myfish;
     Armor *spareArmor;
     HealthBar* player1HealthBar;
     HealthBar* player2HealthBar;

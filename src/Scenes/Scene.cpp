@@ -20,7 +20,7 @@ void Scene::update() {
 
     processInput();
     processMovement();
-    processPicking();
+    //processPicking();
 }
 
 void Scene::startLoop() {

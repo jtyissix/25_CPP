@@ -274,7 +274,7 @@ void Intro::startLevel(int levelNumber) {
     hide();
     
     // 创建并显示游戏窗口
-    MyGame* game = new MyGame();
+    MyGame* game = new MyGame(this);
     game->show();
     //game->setAttribute(Qt::WA_DeleteOnClose);
     // 当游戏窗口关闭时，重新显示主界面
