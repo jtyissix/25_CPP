@@ -137,6 +137,7 @@ protected:
     int weaponMountY;
     int weaponAttackX;
     int weaponAttackY;
+    double moveSpeed{0.3};
 //    QGraphicsEllipseItem *ellipseItem; // for debugging
 private:
     bool leftDown{}, rightDown{}, pickDown{};

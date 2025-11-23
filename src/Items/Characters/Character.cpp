@@ -151,7 +151,7 @@ void Character::processInput() {
     //processJump();
     //applyGravity();
     auto velocity = getVelocity();
-    double moveSpeed = 0.3;
+    //double moveSpeed = 0.3;
     if(getIsPill()){
         qint64 currentTime=QDateTime::currentMSecsSinceEpoch();
         if((currentTime-lastPillTime)>PILL_TIME){

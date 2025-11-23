@@ -15,6 +15,7 @@ find_package(Qt6 COMPONENTS
         REQUIRED)
 find_package(Qt6 REQUIRED COMPONENTS Core)
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Multimedia)
+find_package(Qt6 REQUIRED COMPONENTS Core)
 
 add_executable(${PROJECT_NAME} src/main.cpp
         src/Intro.cpp
@@ -91,7 +92,9 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/Items/Figure/myfishfig.h src/Items/Figure/myfishfig.cpp
         src/Items/Characters/smallfish.h src/Items/Characters/smallfish.cpp
         )
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(${PROJECT_NAME})
+
+target_link_libraries(25_CPP PRIVATE
         Qt::Core
         Qt::Gui
         Qt::Widgets

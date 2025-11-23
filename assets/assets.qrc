@@ -25,5 +25,6 @@
         <file>Items/a5_icon.png</file>
         <file>Items/background/bg1.jpg</file>
         <file>Items/Characters/Fish2.bmp</file>
+        <file>Items/Characters/fishIconL4.png</file>
     </qresource>
 </RCC>
