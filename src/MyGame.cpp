@@ -76,7 +76,8 @@ void MyGame::onGameOver(const QString& winner) {
             MyGame::restartGame();
         });
     } else {
-        QApplication::quit();
+        //QApplication::quit();
+        close();
     }
 }
 

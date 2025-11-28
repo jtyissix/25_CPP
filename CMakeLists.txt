@@ -16,6 +16,7 @@ find_package(Qt6 COMPONENTS
 find_package(Qt6 REQUIRED COMPONENTS Core)
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Multimedia)
 find_package(Qt6 REQUIRED COMPONENTS Core)
+find_package(Qt6 REQUIRED COMPONENTS Core)
 
 add_executable(${PROJECT_NAME} src/main.cpp
         src/Intro.cpp
@@ -91,6 +92,8 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/Items/Characters/myfish.h src/Items/Characters/myfish.cpp
         src/Items/Figure/myfishfig.h src/Items/Figure/myfishfig.cpp
         src/Items/Characters/smallfish.h src/Items/Characters/smallfish.cpp
+        src/FallingController/fishgenerator.h src/FallingController/fishgenerator.cpp
+        src/Items/Characters/shark.h src/Items/Characters/shark.cpp
         )
 target_link_libraries(${PROJECT_NAME})
 
@@ -100,6 +103,7 @@ target_link_libraries(25_CPP PRIVATE
         Qt::Widgets
         Qt::Multimedia
 )
+target_link_libraries(25_CPP PRIVATE Qt6::Core)
 if(WIN32)
     set_target_properties(${PROJECT_NAME} PROPERTIES
         WIN32_EXECUTABLE TRUE

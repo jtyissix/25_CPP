@@ -7,6 +7,7 @@
 
 #include <QKeyEvent>
 #include <QDateTime>
+#include "../FallingController/fishgenerator.h"
 #include "../UI/HealthBar.h"
 #include "Scene.h"
 #include "../Items/Maps/Map.h"
@@ -60,7 +61,8 @@ private:
     QList<Ice*> iceList;
     void checkIceSpeedUp();
     bool isCharacterInAnyIce(Character* character);
-
+    FishGenerator* fishGenerator;
+    void checkFishCollision();
     Weapon *findNearestUnmountedWeapon(const QPointF &pos, qreal distance_threshold = std::numeric_limits<qreal>::max());
     Drug *findNearestUnmountedDrug(const QPointF &pos, qreal distance_threshold = std::numeric_limits<qreal>::max());
     Armor *findNearestUnmountedArmor(const QPointF &pos, qreal distance_threshold = std::numeric_limits<qreal>::max());

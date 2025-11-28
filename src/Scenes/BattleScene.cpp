@@ -10,6 +10,7 @@
 #include "../Items/Maps/Battlefield.h"
 #include "../Items/Characters/link2.h"
 #include "../FallingController/fallingcontroller.h"
+#include "../Items/Characters/myfish.h"
 #include "../Items/Armors/NormalArmor.h"
 #include "../Items/Armors/BulletArmor.h"
 #include "../Items/Maps/grass.h"
@@ -45,6 +46,19 @@ BattleScene::BattleScene(QObject *parent) : Scene(parent)
     //setupHealthBars();
     //createPlatforms();
     //setup falling controller
+    fishGenerator = new FishGenerator(this);
+    fishGenerator->setScene(this);
+    fishGenerator->setSpawnRange(map->sceneBoundingRect());
+
+    // 设置生成速率（每秒生成数量）
+    fishGenerator->setSpawnRate(2.0, 2.0);  // 左右各2条/秒
+    // 设置 Shark 生成速率（每10秒1条）
+    fishGenerator->setSharkSpawnRate(0.3);  // 0.1 = 每秒0.1条 = 每10秒1条
+    // 设置速度范围 (minX, maxX, minY, maxY)
+    fishGenerator->setVelocityRange(0.15, 0.35, -0.1, 0.1);
+
+    // 启动生成器
+    fishGenerator->startGeneration();
     fallingController = new FallingController();
     fallingController->setScene(this);
     fallingController->setFallingParams(5000);
@@ -336,6 +350,9 @@ void BattleScene::update() {
         return;
     }*/
     Scene::update();
+    if (myfish && fishGenerator) {
+        checkFishCollision();
+    }
     // 处理战斗逻辑
     /*
     processCombat();
@@ -442,6 +459,9 @@ void BattleScene::processMovement() {
 */
     if (fallingController != nullptr) {
         fallingController->processMovement();
+    }
+    if (fishGenerator) {
+        fishGenerator->updateFishMovement(deltaTime);
     }
 
 }
@@ -1120,3 +1140,112 @@ bool BattleScene::isCharacterInAnyIce(Character* character) {
 }
 
 */
+void BattleScene::checkFishCollision() {
+    if (gameEnded) return;
+    QRectF myFishBounds = myfish->sceneBoundingRect();
+
+    const QList<FishInfo>& allFish = fishGenerator->getAllFish();
+
+    for (const FishInfo& info : allFish) {
+        Character* smallFish = info.fish;
+        if (!smallFish) continue;
+
+        QRectF smallFishBounds = smallFish->sceneBoundingRect();
+
+        // 检测碰撞
+        if (myFishBounds.intersects(smallFishBounds)) {
+            // 判断大小（简单比较面积）
+            qreal mySize = myFishBounds.width() * myFishBounds.height();
+            qreal smallSize = smallFishBounds.width() * smallFishBounds.height();
+
+            if (mySize > smallSize) {
+                // 大鱼吃小鱼
+                QPointF myFishPos = myfish->pos();
+                QPointF smallFishPos = smallFish->pos();
+                bool fishIsOnRight = (smallFishPos.x() > myFishPos.x());
+
+                // 转换为MyFish指针并触发张嘴动画
+                if (MyFish* myFishPtr = dynamic_cast<MyFish*>(myfish)) {
+                    myFishPtr->startEatingAnimation(fishIsOnRight);
+                    qDebug() << "Eating animation started, facing" << (fishIsOnRight ? "right" : "left");
+                }
+
+                // 移除被吃掉的小鱼
+                fishGenerator->removeFish(smallFish);
+                // TODO: 增加分数或大小
+                // score += 10;
+                // myfish->grow();
+
+            } else {
+                // 小鱼比玩家大（游戏结束）
+                qDebug() << "MyFish was eaten!";
+                //emit gameOver("Small Fish");
+                gameEnded = true;
+
+                // 停止所有定时器
+                Scene::stopAllTimers();
+                if (fallingController) {
+                    fallingController->stopAllTimers();
+                }
+                if (fishGenerator) {
+                    fishGenerator->stopGeneration();
+                }
+
+                // 延迟发送信号
+                QTimer::singleShot(100, [this]() {
+                    emit gameOver("Small Fish");
+                });  // ← 修改这行
+                return;  // ← 添加
+            }
+
+            // 只处理一次碰撞，避免一帧吃多条鱼
+            break;
+        }
+    }
+    // 检测与 Shark 的碰撞
+    // ⭐⭐⭐ 检测与 Shark 的碰撞（椭圆碰撞法）
+    if (!myfish || !fishGenerator) return;
+
+    const QList<shark*>& allSharks = fishGenerator->getAllSharks();
+
+    for (shark* sharkEnemy : allSharks) {
+        if (!sharkEnemy) continue;
+
+        QRectF sharkBounds = sharkEnemy->sceneBoundingRect();
+
+        // 获取中心点
+        QPointF sharkCenter = sharkBounds.center();
+        QPointF fishCenter = myFishBounds.center();
+
+        // 计算归一化距离（椭圆碰撞）
+        qreal dx = (sharkCenter.x() - fishCenter.x()) / (sharkBounds.width() * 0.4);
+        qreal dy = (sharkCenter.y() - fishCenter.y()) / (sharkBounds.height() * 0.35);
+        qreal normalizedDistance = qSqrt(dx * dx + dy * dy);
+
+        qreal fx = 1.0 / (myFishBounds.width() * 0.4);
+        qreal fy = 1.0 / (myFishBounds.height() * 0.35);
+        normalizedDistance += qSqrt(fx * fx + fy * fy) * 0.5;
+
+        // 如果归一化距离小于阈值，说明碰撞
+        if (normalizedDistance < 1.5) {
+            qDebug() << "MyFish was eaten by Shark!";
+            qDebug() << "Normalized distance:" << normalizedDistance;
+            gameEnded = true;
+
+            // 停止所有定时器
+            Scene::stopAllTimers();
+            if (fallingController) {
+                fallingController->stopAllTimers();
+            }
+            if (fishGenerator) {
+                fishGenerator->stopGeneration();
+            }
+
+            // 延迟发送信号
+            QTimer::singleShot(100, [this]() {
+                emit gameOver("Shark");
+            });
+            return;
+        }
+    }
+}

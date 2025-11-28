@@ -5,7 +5,9 @@
 #include <QGraphicsScene>
 #include <QDebug>
 #include <QBitmap>
-MyFish::MyFish(QGraphicsItem *parent) : Character(parent) {
+MyFish::MyFish(QGraphicsItem *parent) : Character(parent), eating(false)
+    , eatAnimationTimer(nullptr)
+{
     // 加载精灵图
     qDebug() << "=== MyFish Constructor ===";
 
@@ -39,6 +41,9 @@ MyFish::MyFish(QGraphicsItem *parent) : Character(parent) {
     weaponMountY = -50;
     weaponAttackX = 100;
     weaponAttackY = -80;
+    // 创建吃鱼动画定时器
+    eatAnimationTimer = new QTimer(this);
+    connect(eatAnimationTimer, &QTimer::timeout, this, &MyFish::stopEatingAnimation);
 }
 
 
@@ -60,7 +65,14 @@ void MyFish::loadSprites() {
 
     // 提取朝左的图片（比如第0行第1列）
     leftSprite = extractFrame(spriteSheet, 0, 11, frameWidth, frameHeight);
+    // ⭐ 提取朝右张嘴的图片（TODO: 根据你的精灵图实际布局修改行列参数）
+    rightEatSprite = extractFrame(spriteSheet, 0, 4, frameWidth, frameHeight);
 
+    // ⭐ 提取朝左张嘴的图片（TODO: 根据你的精灵图实际布局修改行列参数）
+    leftEatSprite = extractFrame(spriteSheet, 0, 7, frameWidth, frameHeight);
+
+    qDebug() << "Loaded right eat sprite:" << !rightEatSprite.isNull();
+    qDebug() << "Loaded left eat sprite:" << !leftEatSprite.isNull();
     // 如果你想用其他帧，修改行列参数
     // 例如：rightSprite = extractFrame(spriteSheet, 2, 5, frameWidth, frameHeight);
 
@@ -80,8 +92,16 @@ QPixmap MyFish::extractFrame(const QPixmap& spriteSheet, int row, int col, int f
 
 void MyFish::processDirection() {
     // 根据方向切换图片
-    QPixmap currentSprite = getDirection() ? rightSprite : leftSprite;
+    //QPixmap currentSprite = getDirection() ? rightSprite : leftSprite;
+    QPixmap currentSprite;
 
+    if (eating) {
+        // 正在吃鱼，显示张嘴的图片
+        currentSprite = getDirection() ? rightEatSprite : leftEatSprite;
+    } else {
+        // 正常状态
+        currentSprite = getDirection() ? rightSprite : leftSprite;
+    }
     // 更新所有 figure 的图片
     if (figure && figure->pixmapItem) {
         figure->pixmapItem->setPixmap(currentSprite);
@@ -162,4 +182,44 @@ void MyFish::pickUpArmor(Armor *newArmor) {
     }
 
     armor = newArmor;
+}
+void MyFish::startEatingAnimation(bool facingRight) {
+    eating = true;
+
+    // 更新方向
+    setDirection(facingRight);
+
+    // 更新图片为张嘴状态
+    updateEatingSprite();
+
+    // 设置200ms后恢复正常状态
+    eatAnimationTimer->start(200);
+
+    qDebug() << "Started eating animation, facing" << (facingRight ? "right" : "left");
+}
+
+void MyFish::stopEatingAnimation() {
+    eating = false;
+    eatAnimationTimer->stop();
+
+    // 恢复正常图片
+    processDirection();
+
+    qDebug() << "Stopped eating animation";
+}
+
+void MyFish::updateEatingSprite() {
+    QPixmap eatSprite = getDirection() ? rightEatSprite : leftEatSprite;
+
+    if (figure && figure->pixmapItem) {
+        figure->pixmapItem->setPixmap(eatSprite);
+    }
+
+    if (figureKneeDown && figureKneeDown->pixmapItem) {
+        figureKneeDown->pixmapItem->setPixmap(eatSprite);
+    }
+
+    if (figureAttack && figureAttack->pixmapItem) {
+        figureAttack->pixmapItem->setPixmap(eatSprite);
+    }
 }
