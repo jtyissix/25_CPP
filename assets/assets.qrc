@@ -27,5 +27,7 @@
         <file>Items/Characters/Fish2.bmp</file>
         <file>Items/Characters/fishIconL4.png</file>
         <file>Items/Characters/shop_ths.png</file>
+        <file>Items/Characters/fishIconL15.png</file>
+        <file>eat.mp3</file>
     </qresource>
 </RCC>

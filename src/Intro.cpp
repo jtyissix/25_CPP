@@ -26,7 +26,7 @@ Intro::Intro(QWidget *parent)
     audioOutput = new QAudioOutput(this);
     bgmPlayer->setAudioOutput(audioOutput);
     bgmPlayer->setSource(QUrl("qrc:/Items/music/SkyHigh.mp3"));
-    audioOutput->setVolume(0.5);  // 音量 0.0-1.0
+    audioOutput->setVolume(0.2);  // 音量 0.0-1.0
     bgmPlayer->setLoops(QMediaPlayer::Infinite);  // 循环播放
     bgmPlayer->play();
     setupUI();

@@ -1,4 +1,6 @@
-
+//
+// Created by gerw on 8/20/24.
+//
 
 #ifndef QT_PROGRAMMING_2024_BATTLESCENE_H
 #define QT_PROGRAMMING_2024_BATTLESCENE_H
@@ -16,11 +18,8 @@
 #include "../Items/Armors/Armor.h"
 #include "../Items/Maps/grass.h"
 #include "../Items/Maps/ice.h"
-#include "Platform.h"
-#include <QList>
-#include <QGraphicsTextItem>
-#include <QMediaPlayer>
-#include <QAudioOutput>
+#include "Platform.h"  // 平台头文件
+#include <QList>       // 用于管理平台列表
 class BattleScene : public Scene {
 Q_OBJECT
 
@@ -31,6 +30,8 @@ public:
 
     void processMovement() override;
 
+    //void processPicking() override;
+    //void stopAllTimers();
     void processPhysics();
 
     void processCombat();
@@ -72,17 +73,13 @@ private:
     void checkAttackCollision(Character* attacker, Character* target);
     void updateHealthBars();
     void setupHealthBars();
+    // 子弹相关处理
     void processBullets();
     void processBalls();
     void checkBulletCollision(Bullet* bullet);
     void checkBallCollision(Ball* ball);
     void processKnife();
     void checkKnifeCollision(Knife* knife);
-    void checkGameOver();
-    void takeDamage();
-    void updateFishCounter();
-    void checkVictory();
-    
     Map *map;
     Character *character;
     Character *character2;
@@ -90,24 +87,10 @@ private:
     Armor *spareArmor;
     HealthBar* player1HealthBar;
     HealthBar* player2HealthBar;
-    HealthBar* myFishHealthBar;
     FallingController* fallingController;
     QList<Platform*> platforms;
+    void checkGameOver();
     bool gameEnded;
-    bool isInvincible;
-    qint64 lastDamageTime;
-    static constexpr qint64 INVINCIBILITY_DURATION = 2000; // 2秒无敌时间
-    int lives;
-    int fishEaten;
-    QMediaPlayer* eatSoundPlayer;
-    QAudioOutput* audioOutput;
-
-
-    void playEatSound();
-    void showScorePopup(const QPointF& position, QString score);
-    QGraphicsTextItem* fishCounterText;
-    static constexpr int MAX_LIVES = 3;
-    static constexpr int WIN_FISH_COUNT = 3;
 };
 
 

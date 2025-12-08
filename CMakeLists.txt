@@ -94,7 +94,7 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/Items/Characters/smallfish.h src/Items/Characters/smallfish.cpp
         src/FallingController/fishgenerator.h src/FallingController/fishgenerator.cpp
         src/Items/Characters/shark.h src/Items/Characters/shark.cpp
-        )
+        src/Items/Characters/midfish.h src/Items/Characters/midfish.cpp)
 target_link_libraries(${PROJECT_NAME})
 
 target_link_libraries(25_CPP PRIVATE

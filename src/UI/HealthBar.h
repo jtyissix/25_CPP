@@ -14,6 +14,12 @@ public:
     // 设置生命值 (0.0 - 1.0)
     void setHealthPercentage(qreal percentage);
 
+    // 新增：设置自定义显示文本
+    void setHealthText(const QString& text);
+
+    // 新增：设置当前值和最大值
+    void setHealthValues(int current, int max);
+
     // 设置最大宽度
     void setMaxWidth(qreal width);
 
@@ -34,6 +40,10 @@ private:
     qreal maxWidth;
     qreal currentHealth; // 0.0 - 1.0
     bool isRightAligned;
+
+    // 新增：自定义文本
+    QString customHealthText;
+    bool useCustomText;
 
     static constexpr qreal BAR_HEIGHT = 20;
     static constexpr qreal TEXT_HEIGHT = 15;

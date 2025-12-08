@@ -1,4 +1,6 @@
-
+//
+// Created by gerw on 8/20/24.
+//
 
 
 #include <QDateTime>
@@ -14,17 +16,10 @@
 #include "../Items/Maps/grass.h"
 #include "../Items/Maps/ice.h"
 #include <QTimer>
-#include <QFont>
-#include <QMediaPlayer>
-#include <QAudioOutput>
-#include <QPropertyAnimation>
 BattleScene::BattleScene(QObject *parent) : Scene(parent)
-    , gameEnded(false)
-    , lives(MAX_LIVES)
-    , fishEaten(0)
-    , myFishHealthBar(nullptr)
-    , fishCounterText(nullptr),isInvincible(false)
-    , lastDamageTime(0){
+    /*, player1HealthBar(nullptr)
+    , player2HealthBar(nullptr)*/
+    , gameEnded(false){
     // This is useful if you want the scene to have the exact same dimensions as the view
     setSceneRect(0, 0, 1180, 640);
     map = new Battlefield();
@@ -48,30 +43,23 @@ BattleScene::BattleScene(QObject *parent) : Scene(parent)
     //character2->setPos(sceneRect().right()-150,map->getFloorHeight());
     //spareArmor->unmount();
     //spareArmor->setPos(sceneRect().left() + (sceneRect().right() - sceneRect().left()) *0.75, map->getFloorHeight());
-    setupHealthBars();
-    eatSoundPlayer = new QMediaPlayer(this);
-    audioOutput = new QAudioOutput(this);
-    eatSoundPlayer->setAudioOutput(audioOutput);
-
-
-
-
-    eatSoundPlayer->setSource(QUrl("qrc:/eat.mp3"));
-
-    audioOutput->setVolume(0.5);
+    //setupHealthBars();
     //createPlatforms();
     //setup falling controller
     fishGenerator = new FishGenerator(this);
     fishGenerator->setScene(this);
     fishGenerator->setSpawnRange(map->sceneBoundingRect());
 
-    fishGenerator->setSpawnRate(2.0, 2.0);
-    fishGenerator->setSharkSpawnRate(0.3);
+    // 设置生成速率（每秒生成数量）
+    fishGenerator->setSpawnRate(2.0, 2.0);  // 左右各2条/秒
+    // 设置 Shark 生成速率（每10秒1条）
+    fishGenerator->setSharkSpawnRate(0.3);  // 0.1 = 每秒0.1条 = 每10秒1条
+    // 设置速度范围 (minX, maxX, minY, maxY)
     fishGenerator->setVelocityRange(0.15, 0.35, -0.1, 0.1);
     fishGenerator->setTargetFish(myfish);
     fishGenerator->setMidfishSpawnRate(0.5);
+    // 启动生成器
     fishGenerator->startGeneration();
-    
     fallingController = new FallingController();
     fallingController->setScene(this);
     fallingController->setFallingParams(5000);
@@ -81,6 +69,7 @@ BattleScene::BattleScene(QObject *parent) : Scene(parent)
     fallingController->startLoop();
 }
 void BattleScene::createGrass(){
+    // 清理旧的草地列表
     grassList.clear();
 
     auto grass1=new Grass(nullptr);
@@ -109,6 +98,7 @@ void BattleScene::createGrass(){
     grassList.append(grass5);
 }
 void BattleScene::createIce(){
+    // 清理旧的草地列表
     iceList.clear();
     for(int i=0;i<11;i++){
         auto ice1=new Ice(nullptr);
@@ -342,8 +332,10 @@ void BattleScene::keyReleaseEvent(QKeyEvent *event) {
 void BattleScene::processPhysics() {
 /*
     if (character != nullptr) {
+        // 处理跳跃逻辑
         //character->processJump();
 
+        // 应用重力
         //character->applyGravity();
     }
     */
@@ -352,14 +344,6 @@ void BattleScene::processPhysics() {
 void BattleScene::update() {
     if (gameEnded) {
         return;
-    }
-    // 检查无敌时间是否结束
-    if (isInvincible) {
-        qint64 currentTime = QDateTime::currentMSecsSinceEpoch();
-        if (currentTime - lastDamageTime >= INVINCIBILITY_DURATION) {
-            isInvincible = false;
-            qDebug() << "Invincibility ended";
-        }
     }
     /*
     if (!character || !character2) {
@@ -370,9 +354,10 @@ void BattleScene::update() {
     if (myfish && fishGenerator) {
         checkFishCollision();
     }
-    checkVictory();
+    // 处理战斗逻辑
     /*
     processCombat();
+    // 更新血条显示
     updateHealthBars();
 
     checkGrassVisibility();
@@ -386,6 +371,7 @@ void BattleScene::update() {
     processKnife();
 
     checkGameOver();
+    // 处理物理更新
     //processPhysics();
 */
 }
@@ -395,19 +381,24 @@ void BattleScene::processMovement() {
     if (myfish != nullptr) {
         QPointF oldPos = myfish->pos();
 
+        // 应用速度
         QPointF newPos = myfish->pos() + myfish->getVelocity() * (double) deltaTime;
+        // 边界检测 - 防止角色移出场景
         if (newPos.x() < map->boundingRect().left()) {
             newPos.setX( map->boundingRect().left());
+            // 停止水平移动
             QPointF vel = myfish->getVelocity();
             vel.setX(0);
             myfish->setVelocity(vel);
         } else if (newPos.x()+64 > map->boundingRect().right()) {
             newPos.setX(map->boundingRect().right()-64);
+            // 停止水平移动
             QPointF vel = myfish->getVelocity();
             vel.setX(0);
             myfish->setVelocity(vel);
         }
 
+        // 地面检测
         int fishHeight=64;
         if (newPos.y() < map->boundingRect().top()) {
             newPos.setY(map->boundingRect().top());
@@ -415,6 +406,7 @@ void BattleScene::processMovement() {
             vel.setY(0);
             myfish->setVelocity(vel);
         }
+        // 下边界检测 - 让鱼的底部贴边，而不是锚点贴边
         else if (newPos.y() + fishHeight > map->boundingRect().bottom()) {
             newPos.setY(map->boundingRect().bottom() - fishHeight);
             myfish->setIsOnGround(true);
@@ -431,24 +423,31 @@ void BattleScene::processMovement() {
     if (character2 != nullptr) {
         QPointF oldPos = character2->pos();
 
+        // 应用速度
         QPointF newPos = character2->pos() + character2->getVelocity() * (double) deltaTime;
+        // 边界检测 - 防止角色移出场景
         if (newPos.x() < map->boundingRect().left()) {
             newPos.setX( map->boundingRect().left());
+            // 停止水平移动
             QPointF vel = character->getVelocity();
             vel.setX(0);
             character2->setVelocity(vel);
         } else if (newPos.x() > map->boundingRect().right()) {
             newPos.setX(map->boundingRect().right());
+            // 停止水平移动
             QPointF vel = character->getVelocity();
             vel.setX(0);
             character2->setVelocity(vel);
         }
+
+        // 地面检测
 
         qreal groundLevel = map->getFloorHeight();
 
         if (newPos.y() >= groundLevel) {
             newPos.setY(groundLevel);
             character2->setIsOnGround(true);
+            // 如果着地，停止垂直移动
             QPointF vel = character->getVelocity();
             vel.setY(0);
             character2->setVelocity(vel);
@@ -486,14 +485,17 @@ void BattleScene::processMovement() {
 
 }*/
 /*
+// 角色移动处理
 void BattleScene::processCharacterMovement(Character* character) {
     if (!character) return;
 
     QPointF currentPos = character->pos();
     QPointF velocity = character->getVelocity();
 
+    // 计算预期的新位置
     QPointF newPos = currentPos + velocity * (double) deltaTime;
 
+    // 边界检测 - 防止角色移出场景
     if (newPos.x() < map->boundingRect().left()) {
         newPos.setX(map->boundingRect().left());
         velocity.setX(0);
@@ -510,47 +512,59 @@ void BattleScene::processCharacterMovement(Character* character) {
         character->setVelocity(velocity);
     }
 
+    // 垂直碰撞检测和位置调整
     newPos = handleVerticalCollision(character, newPos, velocity);
 
+    // 设置最终位置
     character->setPos(newPos);
 }
 
+// 处理垂直方向的碰撞检测（平台和地面）
 QPointF BattleScene::handleVerticalCollision(Character* character, QPointF newPos, QPointF velocity) {
+    // 获取角色的完整碰撞框
     QRectF charBounds = character->getCollisionBounds();
     qreal charWidth = charBounds.width();
     qreal charHeight = charBounds.height();
 
+    // 创建基于新位置的角色边界框
     QRectF newCharBounds(newPos.x() - charWidth/2, newPos.y() - charHeight, charWidth, charHeight);
 
+    // 地面高度
     qreal groundLevel = map->getFloorHeight();
 
+    // 检查平台碰撞
     Platform* collidingPlatform = findCollidingPlatform(character->pos(), newPos, newCharBounds, velocity);
 
     if (collidingPlatform) {
         QRectF platformRect = collidingPlatform->getCollisionRect();
 
         if (velocity.y() > 0) {
+            // 向下移动，脚部撞到平台顶部 - 站在平台上
             qreal platformTop = platformRect.top();
-            newPos.setY(platformTop);
+            newPos.setY(platformTop); // 角色脚部对齐到平台顶部
             character->setIsOnGround(true);
             velocity.setY(0);
             character->setVelocity(velocity);
 
 
         } else if (velocity.y() < 0) {
+            // 向上移动，头部撞到平台底部 - 停止向上移动
             qreal platformBottom = platformRect.bottom();
-            newPos.setY(platformBottom + charHeight);
+            // 关键修复：角色头部（顶部）撞到平台底部
+            newPos.setY(platformBottom + charHeight); // 角色头部紧贴平台底部
             velocity.setY(0);
             character->setVelocity(velocity);
 
         }
     } else if (newPos.y() >= groundLevel) {
+        // 没有平台碰撞，检查地面
         newPos.setY(groundLevel);
         character->setIsOnGround(true);
         velocity.setY(0);
         character->setVelocity(velocity);
 
     } else {
+        // 在空中
         character->setIsOnGround(false);
     }
 
@@ -562,16 +576,19 @@ Platform* BattleScene::findCollidingPlatform(const QPointF& currentPos, const QP
     for (Platform* platform : platforms) {
         QRectF platformRect = platform->getCollisionRect();
 
+        // 检查水平重叠
         bool horizontalOverlap = !(charBounds.right() < platformRect.left() ||
                                    charBounds.left() > platformRect.right());
 
         if (!horizontalOverlap) continue;
 
         if (velocity.y() > 0) {
-            qreal charFootCurrent = currentPos.y();
-            qreal charFootNew = newPos.y();
+            // 向下移动：检查脚部是否撞到平台顶部
+            qreal charFootCurrent = currentPos.y();  // 角色当前脚部位置
+            qreal charFootNew = newPos.y();          // 角色新的脚部位置
             qreal platformTop = platformRect.top();
 
+            // 检查是否从平台上方穿过平台顶部
             bool wasAbove = charFootCurrent <= platformTop;
             bool willBeBelow = charFootNew >= platformTop;
 
@@ -581,13 +598,15 @@ Platform* BattleScene::findCollidingPlatform(const QPointF& currentPos, const QP
             }
 
         } else if (velocity.y() < 0) {
+            // 向上移动：检查头部是否撞到平台底部
             QRectF currentCharBounds = character->getCollisionBounds();
-            qreal charHeadCurrent = currentCharBounds.top();
-            qreal charHeadNew = charBounds.top();
+            qreal charHeadCurrent = currentCharBounds.top();    // 角色当前头部位置
+            qreal charHeadNew = charBounds.top();               // 角色新的头部位置
             qreal platformBottom = platformRect.bottom();
 
             qreal distance = platformBottom - charHeadNew;
 
+            // 只有距离很近(比如5像素内)才算碰撞
             if (distance >= 0 && distance <= 50 && velocity.y() < 0) {
 
                 return platform;
@@ -598,17 +617,21 @@ Platform* BattleScene::findCollidingPlatform(const QPointF& currentPos, const QP
     return nullptr;
 }
 
+// 修复：更准确的支撑平台查找
 Platform* BattleScene::findSupportingPlatform(const QRectF& characterBounds, qreal velocityY) {
     for (Platform* platform : platforms) {
         QRectF platformRect = platform->getCollisionRect();
 
+        // 检查水平重叠
         bool horizontalOverlap = !(characterBounds.right() < platformRect.left() ||
                                    characterBounds.left() > platformRect.right());
 
         if (horizontalOverlap) {
+            // 检查垂直位置关系
             qreal charBottom = characterBounds.bottom();
             qreal platformTop = platformRect.top();
 
+            // 角色脚部在平台顶部附近（容差5像素）
             if (abs(charBottom - platformTop) <= 2) {
                 return platform;
             }
@@ -649,7 +672,7 @@ void BattleScene::processPicking() {
         }
     }
 }
-*/
+
 Weapon *BattleScene::findNearestUnmountedWeapon(const QPointF &pos, qreal distance_threshold) {
     Weapon *nearest = nullptr;
     qreal minDistance = distance_threshold;
@@ -710,60 +733,32 @@ Armor *BattleScene::findNearestUnmountedArmor(const QPointF &pos, qreal distance
 
 
 void BattleScene::setupHealthBars() {
-    /*
+    // 创建玩家1血条（左上角）
     player1HealthBar = new HealthBar("Player 1");
     player1HealthBar->setMaxWidth(250);
-    player1HealthBar->setPosition(20, 50, false);
+    player1HealthBar->setPosition(20, 50, false); // 左对齐
     addItem(player1HealthBar);
 
+    // 创建玩家2血条（右上角）
     player2HealthBar = new HealthBar("Player 2");
     player2HealthBar->setMaxWidth(250);
-    player2HealthBar->setPosition(sceneRect().width() - 20, 50, true);
+    player2HealthBar->setPosition(sceneRect().width() - 20, 50, true); // 右对齐
     addItem(player2HealthBar);
 
+    // 初始化血条显示
     updateHealthBars();
-    */
-    
-    myFishHealthBar = new HealthBar("Lives");
-    myFishHealthBar->setMaxWidth(200);
-    myFishHealthBar->setPosition(20, 50, false);
-    addItem(myFishHealthBar);
-    
-    fishCounterText = new QGraphicsTextItem();
-    QFont font("Arial", 16, QFont::Bold);
-    fishCounterText->setFont(font);
-    fishCounterText->setDefaultTextColor(QColor(255, 255, 255));
-    fishCounterText->setPos(sceneRect().width() - 200, 20);
-    addItem(fishCounterText);
-    
-    updateHealthBars();
-    updateFishCounter();
 }
 
 void BattleScene::updateHealthBars() {
-    /*
     if (player1HealthBar && character) {
         player1HealthBar->setHealthPercentage(character->getHealthPercentage());
     }
     if (player2HealthBar && character2) {
         player2HealthBar->setHealthPercentage(character2->getHealthPercentage());
     }
-    */
-    
-    if (myFishHealthBar) {
-        qreal healthPercentage = static_cast<qreal>(lives) / static_cast<qreal>(MAX_LIVES);
-         myFishHealthBar->setHealthValues(lives, MAX_LIVES);
-    }
-}
-
-void BattleScene::updateFishCounter() {
-    if (fishCounterText) {
-        fishCounterText->setPlainText(QString("Fish: %1/%2").arg(fishEaten).arg(WIN_FISH_COUNT));
-    }
 }
 
 void BattleScene::processCombat() {
-    /*
     if (!character || !character2) return;
 
     if (character->getAttack() || character2->getAttack()) {
@@ -771,84 +766,91 @@ void BattleScene::processCombat() {
 
     }
 
+    // 检查角色1攻击角色2
     if (character->canDealDamage()) {
         checkAttackCollision(character, character2);
 
     }
 
+    // 检查角色2攻击角色1
     if (character2->canDealDamage()) {
         checkAttackCollision(character2, character);
     }
-    */
 }
 
 void BattleScene::checkAttackCollision(Character* attacker, Character* target) {
-    /*
     if (!attacker || !target || !attacker->isAttacking() || !target->isAlive()) {
 
         return;
     }
 
+    // 获取攻击者的攻击范围
     QRectF attackBounds = attacker->getAttackBounds();
 
+    // 获取目标的碰撞框
     QRectF targetBounds = target->getCollisionBounds();
 
 
+    // 检查碰撞
     if (attackBounds.intersects(targetBounds)) {
+        // 造成伤害
         if(auto hasNormArmor=dynamic_cast<NormalArmor*>(target->getArmor())){
 
         }
         else{
-        target->takeDamage(2);
+        target->takeDamage(2); // 拳头伤害为2
         }
+        // 更新攻击者的最后攻击时间，防止连续伤害
         qint64 currentTime = QDateTime::currentMSecsSinceEpoch();
         attacker->setLastAttackTime(currentTime);
 
 
 
 
+        // 如果目标死亡
         if (!target->isAlive()) {
 
 
         }
     }
-    */
 }
 
 Mountable * pickup(Character *character, Mountable *mountable){
     //out of date
-    return nullptr;
 }
 
+// 添加子弹处理方法
 void BattleScene::processBullets() {
-    /*
+    // 获取场景中所有的子弹并更新它们
     QList<QGraphicsItem*> itemList = items();
     for (QGraphicsItem* item : itemList) {
         if (auto bullet = dynamic_cast<Bullet*>(item)) {
+            // 更新子弹位置
             QPointF currentPos = bullet->pos();
             //bullet->applyGravity();
             QPointF velocity = bullet->getVelocity();
             currentPos += velocity * deltaTime;
             bullet->setPos(currentPos);
 
+            // 检查是否超出屏幕边界
             if (!sceneRect().contains(currentPos)) {
                 removeItem(bullet);
                 bullet->deleteLater();
                 continue;
             }
 
+            // 检查子弹与角色的碰撞
             checkBulletCollision(bullet);
         }
     }
-    */
 }
 
 void BattleScene::checkBulletCollision(Bullet* bullet) {
-    /*
     if (!bullet) return;
 
     QRectF bulletBounds = bullet->sceneBoundingRect();
 
+    // 检查与角色1的碰撞
     if (character && character->isAlive()) {
         QRectF char1Bounds = character->getCollisionBounds();
         if (bulletBounds.intersects(char1Bounds)&&bullet->sourceID==character2->id) {
@@ -861,7 +863,7 @@ void BattleScene::checkBulletCollision(Bullet* bullet) {
             }
             else{
             character->takeDamage(bullet->hurt);
-            }
+            }                // 子弹伤害
             removeItem(bullet);
             bullet->deleteLater();
 
@@ -869,6 +871,7 @@ void BattleScene::checkBulletCollision(Bullet* bullet) {
         }
     }
 
+    // 检查与角色2的碰撞
     if (character2 && character2->isAlive()) {
         QRectF char2Bounds = character2->getCollisionBounds();
         if (bulletBounds.intersects(char2Bounds)&&bullet->sourceID==character->id) {
@@ -882,50 +885,51 @@ void BattleScene::checkBulletCollision(Bullet* bullet) {
             else{
                 character2->takeDamage(bullet->hurt);
             }
-            //character2->takeDamage(bullet->hurt);
+            //character2->takeDamage(bullet->hurt); // 子弹伤害
             removeItem(bullet);
             bullet->deleteLater();
 
             return;
         }
     }
-    */
 }
 
 
 void BattleScene::processBalls() {
-    /*
+    // 获取场景中所有的子弹并更新它们
     QList<QGraphicsItem*> itemList = items();
     for (QGraphicsItem* item : itemList) {
         if (auto bullet = dynamic_cast<Ball*>(item)) {
+            // 更新子弹位置
             QPointF currentPos = bullet->pos();
             bullet->applyGravity();
             QPointF velocity = bullet->getVelocity();
             currentPos += velocity * deltaTime;
             bullet->setPos(currentPos);
 
+            // 检查是否超出屏幕边界
             if (!sceneRect().contains(currentPos)) {
                 removeItem(bullet);
                 bullet->deleteLater();
                 continue;
             }
 
+            // 检查子弹与角色的碰撞
             checkBallCollision(bullet);
         }
     }
-    */
 }
 
 void BattleScene::checkBallCollision(Ball* bullet) {
-    /*
     if (!bullet) return;
 
     QRectF bulletBounds = bullet->sceneBoundingRect();
 
+    // 检查与角色1的碰撞
     if (character && character->isAlive()) {
         QRectF char1Bounds = character->getCollisionBounds();
         if (bulletBounds.intersects(char1Bounds)&&bullet->sourceID==character2->id) {
-            character->takeDamage(bullet->hurt);
+            character->takeDamage(bullet->hurt); // 子弹伤害
             removeItem(bullet);
             bullet->deleteLater();
 
@@ -933,17 +937,17 @@ void BattleScene::checkBallCollision(Ball* bullet) {
         }
     }
 
+    // 检查与角色2的碰撞
     if (character2 && character2->isAlive()) {
         QRectF char2Bounds = character2->getCollisionBounds();
         if (bulletBounds.intersects(char2Bounds)&&bullet->sourceID==character->id) {
-            character2->takeDamage(bullet->hurt);
+            character2->takeDamage(bullet->hurt); // 子弹伤害
             removeItem(bullet);
             bullet->deleteLater();
 
             return;
         }
     }
-    */
 }
 
 
@@ -951,27 +955,28 @@ void BattleScene::checkBallCollision(Ball* bullet) {
 
 
 void BattleScene::processKnife() {
-    /*
+    // 获取场景中所有的子弹并更新它们
     QList<QGraphicsItem*> itemList = items();
     for (QGraphicsItem* item : itemList) {
         if (auto bullet = dynamic_cast<Knife*>(item)) {
+            // 检查与角色的碰撞
             checkKnifeCollision(bullet);
         }
     }
-    */
 }
 
 void BattleScene::checkKnifeCollision(Knife* bullet) {
-    /*
     if (!bullet) return;
 
     QRectF bulletBounds = bullet->sceneBoundingRect();
     Character* attacker = dynamic_cast<Character*>(bullet->parentItem());
     if (!attacker) return;
 
+    // 只有在角色攻击状态且可以造成伤害时才检查碰撞
     if (!attacker->isAttacking() || !attacker->canDealDamage()) {
         return;
     }
+    // 检查与角色1的碰撞
     if (character && character->isAlive()) {
         QRectF char1Bounds = character->getCollisionBounds();
         if (bulletBounds.intersects(char1Bounds)&&bullet->sourceID==character2->id) {
@@ -979,7 +984,7 @@ void BattleScene::checkKnifeCollision(Knife* bullet) {
                 character->takeDamage(bullet->HURT-2);
             }
             else{
-            character->takeDamage(bullet->HURT);
+            character->takeDamage(bullet->HURT); // 子弹伤害
             }
             attacker->setLastAttackTime(QDateTime::currentMSecsSinceEpoch());
 
@@ -987,56 +992,63 @@ void BattleScene::checkKnifeCollision(Knife* bullet) {
         }
     }
 
+    // 检查与角色2的碰撞
     if (character2 && character2->isAlive()) {
         QRectF char2Bounds = character2->getCollisionBounds();
         if (bulletBounds.intersects(char2Bounds)&&bullet->sourceID==character->id) {
-            character2->takeDamage(bullet->HURT);
+            character2->takeDamage(bullet->HURT); // 子弹伤害
             attacker->setLastAttackTime(QDateTime::currentMSecsSinceEpoch());
 
             return;
         }
     }
-    */
 }
 
+//创建多个平台
 void BattleScene::createPlatforms() {
-    /*
+    // 清除已有平台
     for (Platform* platform : platforms) {
         removeItem(platform);
         delete platform;
     }
     platforms.clear();
 
+    // 创建不同高度的平台
 
+
+    // 中央中等高度平台
     Platform* centerMidPlatform = new Platform(500, 450, 180, 30);
     platforms.append(centerMidPlatform);
     addItem(centerMidPlatform);
 
+    // 右侧高平台
     Platform* rightHighPlatform = new Platform(900, 250, 200, 30);
     platforms.append(rightHighPlatform);
     addItem(rightHighPlatform);
 
+    // 左上角小平台
     Platform* leftTopPlatform = new Platform(100, 300, 150, 25);
     platforms.append(leftTopPlatform);
     addItem(leftTopPlatform);
 
 
 
+    // 设置平台样式
     for (Platform* platform : platforms) {
         platform->setPlatformStyle(
             QBrush(QColor(101, 67, 33)),
             QPen(QColor(139, 69, 19), 3)
             );
     }
-    */
 }
 
 
 
+//查找地面高度（包括平台）
 qreal BattleScene::findGroundLevel(const QPointF& position, qreal defaultGround) {
-    /*
     qreal groundLevel = defaultGround;
 
+    // 创建角色边界框用于检测
     QRectF testBounds(position.x() - 25, position.y(), 50, 10);
 
     for (Platform* platform : platforms) {
@@ -1049,12 +1061,9 @@ qreal BattleScene::findGroundLevel(const QPointF& position, qreal defaultGround)
     }
 
     return groundLevel;
-    */
-    return defaultGround;
 }
 
 void BattleScene::checkGameOver() {
-    /*
     if (gameEnded) return;
 
     QString winner = "";
@@ -1074,63 +1083,15 @@ void BattleScene::checkGameOver() {
             fallingController->stopAllTimers();
 
         }
+        // 延迟发送信号，避免在update循环中直接处理
         QTimer::singleShot(100, [this, winner]() {
             emit gameOver(winner);
         });
     }
-    */
-    
-    if (gameEnded) return;
-
-    if (lives <= 0) {
-        gameEnded = true;
-        Scene::stopAllTimers();
-        if (fallingController) {
-            fallingController->stopAllTimers();
-        }
-        if (fishGenerator) {
-            fishGenerator->stopGeneration();
-        }
-        
-        QTimer::singleShot(100, [this]() {
-            emit gameOver("Game Over");
-        });
-    }
 }
 
-void BattleScene::checkVictory() {
-    if (gameEnded) return;
-    
-    if (fishEaten >= WIN_FISH_COUNT) {
-        gameEnded = true;
-        Scene::stopAllTimers();
-        if (fallingController) {
-            fallingController->stopAllTimers();
-        }
-        if (fishGenerator) {
-            fishGenerator->stopGeneration();
-        }
-        
-        QTimer::singleShot(100, [this]() {
-            emit gameOver("Victory");
-        });
-    }
-}
-
-void BattleScene::takeDamage() {
-    if (gameEnded) return;
-    
-    lives--;
-    updateHealthBars();
-    isInvincible = true;
-    lastDamageTime = QDateTime::currentMSecsSinceEpoch();
-    if (lives <= 0) {
-        checkGameOver();
-    }
-}
 
 void BattleScene::checkGrassVisibility() {
-    /*
     if (character) {
         bool inGrass = isCharacterInAnyGrass(character);
         character->setInStealth(inGrass);
@@ -1140,11 +1101,9 @@ void BattleScene::checkGrassVisibility() {
         bool inGrass = isCharacterInAnyGrass(character2);
         character2->setInStealth(inGrass);
     }
-    */
 }
 
 bool BattleScene::isCharacterInAnyGrass(Character* character) {
-    /*
     if (!character) return false;
 
     QPointF charPos = character->pos();
@@ -1153,13 +1112,11 @@ bool BattleScene::isCharacterInAnyGrass(Character* character) {
             return true;
         }
     }
-    */
     return false;
 }
 
 
 void BattleScene::checkIceSpeedUp() {
-    /*
     if (character) {
         bool inIce = isCharacterInAnyIce(character);
         character->setInIce(inIce);
@@ -1169,11 +1126,9 @@ void BattleScene::checkIceSpeedUp() {
         bool inIce = isCharacterInAnyIce(character2);
         character2->setInIce(inIce);
     }
-    */
 }
 
 bool BattleScene::isCharacterInAnyIce(Character* character) {
-    /*
     if (!character) return false;
 
     QPointF charPos = character->pos();
@@ -1182,13 +1137,12 @@ bool BattleScene::isCharacterInAnyIce(Character* character) {
             return true;
         }
     }
-    */
     return false;
 }
 
+*/
 void BattleScene::checkFishCollision() {
-    //if (gameEnded) return;
-    if (gameEnded || isInvincible) return;
+    if (gameEnded) return;
     QRectF myFishBounds = myfish->sceneBoundingRect();
 
     const QList<FishInfo>& allFish = fishGenerator->getAllFish();
@@ -1200,21 +1154,39 @@ void BattleScene::checkFishCollision() {
         QRectF smallFishBounds = smallFish->sceneBoundingRect();
 
         if (myFishBounds.intersects(smallFishBounds)) {
-            QPointF myFishPos = myfish->pos();
-            QPointF smallFishPos = smallFish->pos();
-            bool fishIsOnRight = (smallFishPos.x() > myFishPos.x());
+            qreal mySize = myFishBounds.width() * myFishBounds.height();
+            qreal smallSize = smallFishBounds.width() * smallFishBounds.height();
 
-            if (MyFish* myFishPtr = dynamic_cast<MyFish*>(myfish)) {
-                myFishPtr->startEatingAnimation(fishIsOnRight);
+            if (mySize > smallSize) {
+                QPointF myFishPos = myfish->pos();
+                QPointF smallFishPos = smallFish->pos();
+                bool fishIsOnRight = (smallFishPos.x() > myFishPos.x());
+
+                if (MyFish* myFishPtr = dynamic_cast<MyFish*>(myfish)) {
+                    myFishPtr->startEatingAnimation(fishIsOnRight);
+                    qDebug() << "Eating animation started, facing" << (fishIsOnRight ? "right" : "left");
+                }
+
+                fishGenerator->removeFish(smallFish);
+
+            } else {
+                qDebug() << "MyFish was eaten!";
+                gameEnded = true;
+
+                Scene::stopAllTimers();
+                if (fallingController) {
+                    fallingController->stopAllTimers();
+                }
+                if (fishGenerator) {
+                    fishGenerator->stopGeneration();
+                }
+
+                QTimer::singleShot(100, [this]() {
+                    emit gameOver("Small Fish");
+                });
+                return;
             }
 
-            fishGenerator->removeFish(smallFish);
-            fishEaten++;
-            updateFishCounter();
-            playEatSound();
-
-
-            showScorePopup(smallFishPos, "+1");
             break;
         }
     }
@@ -1241,11 +1213,20 @@ void BattleScene::checkFishCollision() {
 
         if (normalizedDistance < 1.5) {
             qDebug() << "MyFish was eaten by Shark!";
-            takeDamage();
-            playEatSound();
+            qDebug() << "Normalized distance:" << normalizedDistance;
+            gameEnded = true;
 
+            Scene::stopAllTimers();
+            if (fallingController) {
+                fallingController->stopAllTimers();
+            }
+            if (fishGenerator) {
+                fishGenerator->stopGeneration();
+            }
 
-            showScorePopup(sharkEnemy->pos(), "-1");
+            QTimer::singleShot(100, [this]() {
+                emit gameOver("Shark");
+            });
             return;
         }
     }
@@ -1270,88 +1251,22 @@ void BattleScene::checkFishCollision() {
 
         if (normalizedDistance < 1.5) {
             qDebug() << "MyFish was eaten by Midfish!";
-            takeDamage();
-            playEatSound();
+            qDebug() << "Normalized distance:" << normalizedDistance;
+            gameEnded = true;
 
+            Scene::stopAllTimers();
+            if (fallingController) {
+                fallingController->stopAllTimers();
+            }
+            if (fishGenerator) {
+                fishGenerator->stopGeneration();
+            }
 
-            showScorePopup(midfishEnemy->pos(), "-1");
+            QTimer::singleShot(100, [this]() {
+                emit gameOver("Midfish");
+            });
             return;
         }
     }
 }
 
-void BattleScene::processCharacterMovement(Character* character) {
-}
-
-QPointF BattleScene::handleVerticalCollision(Character* character, QPointF newPos, QPointF velocity) {
-    return newPos;
-}
-
-Platform* BattleScene::findCollidingPlatform(const QPointF& currentPos, const QPointF& newPos, const QRectF& charBounds, const QPointF& velocity) {
-    return nullptr;
-}
-
-Platform* BattleScene::findSupportingPlatform(const QRectF& characterBounds, qreal velocityY) {
-    return nullptr;
-}
-void BattleScene::playEatSound() {
-    // 停止当前播放（如果正在播放）
-    if (eatSoundPlayer->playbackState() == QMediaPlayer::PlayingState) {
-        eatSoundPlayer->stop();
-    }
-
-    // 重置到开始位置
-    eatSoundPlayer->setPosition(0);
-
-    // 播放音效
-    eatSoundPlayer->play();
-}
-void BattleScene::showScorePopup(const QPointF& position, QString score) {
-    // 创建文字项
-    QGraphicsTextItem* scoreText = new QGraphicsTextItem();
-    scoreText->setPlainText(score);
-
-    // 设置字体样式
-    QFont font("Arial", 24, QFont::Bold);
-    scoreText->setFont(font);
-    scoreText->setDefaultTextColor(QColor(255, 50, 50)); // 红色
-
-    // 添加文字描边效果（可选）
-    scoreText->setHtml(QString(
-                           "<span style='color: #ff3232; "
-                           "text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, "
-                           "-2px 2px 0 #000, 2px 2px 0 #000;'>"
-                           "%1</span>"
-                           ).arg(score));
-
-    // 设置初始位置（在鱼的位置上方一点）
-    scoreText->setPos(position.x(), position.y() - 50);
-    scoreText->setZValue(1000); // 确保在最上层显示
-
-    // 添加到场景
-    addItem(scoreText);
-
-    //  创建向上漂浮的动画
-    QPropertyAnimation* moveAnimation = new QPropertyAnimation(scoreText, "pos");
-    moveAnimation->setDuration(1000); // 1秒
-    moveAnimation->setStartValue(scoreText->pos());
-    moveAnimation->setEndValue(scoreText->pos() + QPointF(0, -80)); // 向上移动80像素
-    moveAnimation->setEasingCurve(QEasingCurve::OutQuad);
-
-    //  创建淡出动画
-    QPropertyAnimation* fadeAnimation = new QPropertyAnimation(scoreText, "opacity");
-    fadeAnimation->setDuration(1000);
-    fadeAnimation->setStartValue(1.0);
-    fadeAnimation->setEndValue(0.0);
-    fadeAnimation->setEasingCurve(QEasingCurve::InQuad);
-
-    //动画结束后删除文字
-    connect(moveAnimation, &QPropertyAnimation::finished, [this, scoreText]() {
-        removeItem(scoreText);
-        delete scoreText;
-    });
-
-    // 启动动画
-    moveAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-    fadeAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-}

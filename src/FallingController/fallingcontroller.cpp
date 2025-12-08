@@ -38,58 +38,9 @@ void FallingController::setVanishParams(int vanishInterval){
 
 void FallingController::fall(){
     int randomX = rand()%(int)(fallingRange.right()-fallingRange.left()-250)+fallingRange.left();
-    int choice = std::rand()%9+1;
+    int choice = std::rand()%3+1;
     switch(choice){
     case 1:{
-        Weapon *rifle = new Rifle();
-        rifle->mountToParent(randomX,fallingRange.top());
-        rifle->setScene(parentScene);
-        rifle->setBullet();
-        parentScene->addItem(rifle);
-        createdWeapon.push_back(rifle);
-        break;
-    }
-    case 2:{
-        Weapon *sniper = new Sniper();
-        //int randomX = rand()%(int)(fallingRange.right()-fallingRange.left()-250)+fallingRange.left();
-        sniper->mountToParent(randomX,fallingRange.top());
-        sniper->setScene(parentScene);
-        sniper->setBullet();
-        parentScene->addItem(sniper);
-        createdWeapon.push_back(sniper);
-        break;
-    }
-    case 3:{
-        Weapon *ballHand = new BallHand();
-        //int randomX = rand()%(int)(fallingRange.right()-fallingRange.left()-250)+fallingRange.left();
-        ballHand->mountToParent(randomX,fallingRange.top());
-        ballHand->setScene(parentScene);
-        ballHand->setBullet();
-        parentScene->addItem(ballHand);
-        createdWeapon.push_back(ballHand);
-        break;
-    }
-    case 4:{
-        Weapon *knife = new Knife();
-        //int randomX = rand()%(int)(fallingRange.right()-fallingRange.left()-250)+fallingRange.left();
-        knife->mountToParent(randomX,fallingRange.top());
-        knife->setScene(parentScene);
-        //ballHand->setBullet();
-        parentScene->addItem(knife);
-        createdWeapon.push_back(knife);
-        break;
-    }
-    case 5:{
-        Drug *bandage = new Bandage();
-        //int randomX = rand()%(int)(fallingRange.right()-fallingRange.left()-250)+fallingRange.left();
-        bandage->mountToParent(randomX,fallingRange.top());
-        bandage->setScene(parentScene);
-        //ballHand->setBullet();
-        parentScene->addItem(bandage);
-        createdDrug.push_back(bandage);
-        break;
-    }
-    case 6:{
         Drug *medbag = new MedBag();
         //int randomX = rand()%(int)(fallingRange.right()-fallingRange.left()-250)+fallingRange.left();
         medbag->mountToParent(randomX,fallingRange.top());
@@ -99,7 +50,7 @@ void FallingController::fall(){
         createdDrug.push_back(medbag);
         break;
     }
-    case 7:{
+    case 2:{
         Drug *medical = new Medical();
         //int randomX = rand()%(int)(fallingRange.right()-fallingRange.left()-250)+fallingRange.left();
         medical->mountToParent(randomX,fallingRange.top());
@@ -109,26 +60,12 @@ void FallingController::fall(){
         createdDrug.push_back(medical);
         break;
     }
-    case 8:{
-        Armor *normArmor = new NormalArmor();
-        //int randomX = rand()%(int)(fallingRange.right()-fallingRange.left()-250)+fallingRange.left();
-        normArmor->mountToParent(randomX,fallingRange.top());
-        normArmor->setScene(parentScene);
-        //ballHand->setBullet();
-        parentScene->addItem(normArmor);
-        createdArmor.push_back(normArmor);
-        break;
+    case 3:{
+
     }
-    case 9:{
-        Armor *normArmor = new BulletArmor();
-        //int randomX = rand()%(int)(fallingRange.right()-fallingRange.left()-250)+fallingRange.left();
-        normArmor->mountToParent(randomX,fallingRange.top());
-        normArmor->setScene(parentScene);
-        //ballHand->setBullet();
-        parentScene->addItem(normArmor);
-        createdArmor.push_back(normArmor);
-        break;
-    }
+
+
+
     }
 }
 

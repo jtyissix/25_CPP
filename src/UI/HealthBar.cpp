@@ -8,6 +8,7 @@ HealthBar::HealthBar(const QString& playerName, QGraphicsItem* parent)
     , maxWidth(200)
     , currentHealth(1.0)
     , isRightAligned(false)
+    , useCustomText(false)  // ✅ 初始化
 {
     // 创建背景矩形
     backgroundRect = new QGraphicsRectItem(this);
@@ -40,6 +41,21 @@ void HealthBar::setHealthPercentage(qreal percentage) {
     updateHealthBar();
 }
 
+// ✅ 新增方法
+void HealthBar::setHealthText(const QString& text) {
+    customHealthText = text;
+    useCustomText = true;
+    updateHealthBar();
+}
+
+// ✅ 新增方法
+void HealthBar::setHealthValues(int current, int max) {
+    currentHealth = static_cast<qreal>(current) / static_cast<qreal>(max);
+    customHealthText = QString("%1/%2").arg(current).arg(max);
+    useCustomText = true;
+    updateHealthBar();
+}
+
 void HealthBar::setMaxWidth(qreal width) {
     maxWidth = width;
     updateHealthBar();
@@ -56,9 +72,13 @@ qreal HealthBar::getHealthPercentage() const {
 }
 
 void HealthBar::updateHealthBar() {
-    // 更新血量文本
-    int healthPoints = static_cast<int>(currentHealth * 100);
-    healthText->setPlainText(QString("%1/100").arg(healthPoints));
+    // ✅ 更新血量文本 - 使用自定义文本或默认百分比
+    if (useCustomText) {
+        healthText->setPlainText(customHealthText);
+    } else {
+        int healthPoints = static_cast<int>(currentHealth * 100);
+        healthText->setPlainText(QString("%1/100").arg(healthPoints));
+    }
 
     // 计算布局
     qreal totalHeight = TEXT_HEIGHT + BAR_HEIGHT + PADDING;

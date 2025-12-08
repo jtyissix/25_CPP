@@ -33,7 +33,7 @@ protected:
     std::vector<Drug*> createdDrug;
     std::vector<Armor*> createdArmor;
     QGraphicsScene* parentScene;
-    qreal groundLevel{600};
+    qreal groundLevel{0};
 protected slots:
     void fall();
     void vanish();
