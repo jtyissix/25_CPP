@@ -151,7 +151,7 @@ void Character::processInput() {
     //processJump();
     //applyGravity();
     auto velocity = getVelocity();
-    //double moveSpeed = 0.3;
+    double _moveSpeed = (double)moveSpeed;
     if(getIsPill()){
         qint64 currentTime=QDateTime::currentMSecsSinceEpoch();
         if((currentTime-lastPillTime)>PILL_TIME){
@@ -159,10 +159,10 @@ void Character::processInput() {
             lastPillTime=currentTime;
         }
         else{
-            moveSpeed=(double)PILL_SPEED;
+            _moveSpeed=(double)moveSpeed*2;
             if((currentTime-lastPillCureTime)>500){
                 lastPillCureTime=currentTime;
-                takeDamage(-1);
+                //takeDamage(-1);
             }
 
         }
@@ -173,24 +173,24 @@ void Character::processInput() {
     velocity.setX(0);
     velocity.setY(0);
     if (isLeftDown()) {
-        velocity.setX(- moveSpeed);
+        velocity.setX(- _moveSpeed);
 
     }
 
     if (isRightDown()) {
-        velocity.setX(+ moveSpeed);
+        velocity.setX(+ _moveSpeed);
     }
 
     if (isLeftDown()) {
-        velocity.setX(- moveSpeed);
+        velocity.setX(- _moveSpeed);
 
     }
 
     if (isUp()) {
-        velocity.setY(- moveSpeed);
+        velocity.setY(- _moveSpeed);
     }
     if (isDown()) {
-        velocity.setY(+ moveSpeed);
+        velocity.setY(+ _moveSpeed);
     }
 
     if (!lastPickDown && pickDown) { // first time pickDown
@@ -329,7 +329,7 @@ void Character::pickUpWeapon(Weapon* weaponToPick){
 }
 
 void Character::pickUpDrug(Drug* drugToPick){
-
+    drugToPick->setIsPicked(true);
     drugToPick->setParentItem(this);
     drugToPick->effect();
     drugToPick->setVisible(false);

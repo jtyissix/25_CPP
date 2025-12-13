@@ -38,7 +38,7 @@ void FallingController::setVanishParams(int vanishInterval){
 
 void FallingController::fall(){
     int randomX = rand()%(int)(fallingRange.right()-fallingRange.left()-250)+fallingRange.left();
-    int choice = std::rand()%3+1;
+    int choice = std::rand()%2+1;
     switch(choice){
     case 1:{
         Drug *medbag = new MedBag();

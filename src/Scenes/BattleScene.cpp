@@ -13,6 +13,7 @@
 #include "../Items/Armors/BulletArmor.h"
 #include "../Items/Maps/grass.h"
 #include "../Items/Maps/ice.h"
+#include "../Items/Drugs/medbag.h"
 #include <QTimer>
 #include <QFont>
 #include <QMediaPlayer>
@@ -617,39 +618,28 @@ Platform* BattleScene::findSupportingPlatform(const QRectF& characterBounds, qre
 
     return nullptr;
 }
+*/
 void BattleScene::processPicking() {
     Scene::processPicking();
-    if (character->isPicking()) {
-        auto weapon = findNearestUnmountedWeapon(character->pos(), 150);
-        auto drug = findNearestUnmountedDrug(character->pos(), 500);
-        auto armor = findNearestUnmountedArmor(character->pos(),300);
-        if (weapon != nullptr) {
-            character->pickUpWeapon(weapon);//spareArmor = dynamic_cast<Armor *>(pickup(character, mountable));
-        }
+
+        //auto weapon = findNearestUnmountedWeapon(character->pos(), 150);
+    auto drug = findNearestUnmountedDrug(myfish->pos(), 200);
+        //auto armor = findNearestUnmountedArmor(character->pos(),300);
+
         if (drug != nullptr){
-            character->pickUpDrug(drug);
+            myfish->pickUpDrug(drug);
 
         }
-        if (armor != nullptr){
-            character->pickUpArmor(armor);
+        if (dynamic_cast<MedBag*>(drug)){
+            if(lives<MAX_LIVES){
+                lives++;
+                updateHealthBars();
+            }
         }
-    }
-    if (character2->isPicking()) {
-        auto weapon = findNearestUnmountedWeapon(character2->pos(), 150);
-        auto drug = findNearestUnmountedDrug(character2->pos(), 500);
-        auto armor = findNearestUnmountedArmor(character2->pos(),300);
-        if (weapon != nullptr) {
-            character2->pickUpWeapon(weapon);//spareArmor = dynamic_cast<Armor *>(pickup(character, mountable));
-        }
-        if (drug != nullptr){
-            character2->pickUpDrug(drug);
-        }
-        if (armor != nullptr){
-            character2->pickUpArmor(armor);
-        }
-    }
+
+
 }
-*/
+
 Weapon *BattleScene::findNearestUnmountedWeapon(const QPointF &pos, qreal distance_threshold) {
     Weapon *nearest = nullptr;
     qreal minDistance = distance_threshold;
@@ -677,7 +667,7 @@ Drug *BattleScene::findNearestUnmountedDrug(const QPointF &pos, qreal distance_t
     for (QGraphicsItem *item: items()) {
         if (auto weapon = dynamic_cast<Drug *>(item)) {
             if (!weapon->getIsPicked()) {
-                qreal distance = QLineF(pos, item->pos()).length();
+                qreal distance = QLineF(pos, item->sceneBoundingRect().center()).length();
                 if (distance < minDistance) {
                     minDistance = distance;
                     nearest = weapon;

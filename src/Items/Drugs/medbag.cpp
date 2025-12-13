@@ -15,6 +15,6 @@ void MedBag::mountToParent(double x,double y){
 }
 
 void MedBag::effect(){
-    auto character = dynamic_cast<Character*>(parentItem());
-    character->takeDamage(-CURE);
+    //auto character = dynamic_cast<Character*>(parentItem());
+    //character->takeDamage(-CURE);
 }

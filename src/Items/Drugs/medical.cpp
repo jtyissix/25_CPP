@@ -15,6 +15,7 @@ void Medical::mountToParent(double x,double y){
 }
 
 void Medical::effect(){
+    //auto scene = dynamic_cast<Character*>(parentItem())->parentItem();
     auto character = dynamic_cast<Character*>(parentItem());
     character->setPill(true);
     character->lastPillTime=QDateTime::currentMSecsSinceEpoch();

@@ -13,12 +13,13 @@ public:
     // 张嘴动画控制
     void startEatingAnimation(bool facingRight);
     void stopEatingAnimation();
+    QPixmap leftSprite;
     bool isEating() const { return eating; }
 private:
     void loadSprites();
     QPixmap extractFrame(const QPixmap& spriteSheet, int row, int col, int frameWidth, int frameHeight);
     void updateEatingSprite();
-    QPixmap leftSprite;   // 朝左的图片
+    //QPixmap leftSprite;   // 朝左的图片
     QPixmap rightSprite;  // 朝右的图片
     QPixmap leftEatSprite;     // 朝左张嘴的图片
     QPixmap rightEatSprite;    // 朝右张嘴的图片
