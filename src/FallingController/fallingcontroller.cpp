@@ -38,7 +38,7 @@ void FallingController::setVanishParams(int vanishInterval){
 
 void FallingController::fall(){
     int randomX = rand()%(int)(fallingRange.right()-fallingRange.left()-250)+fallingRange.left();
-    int choice = std::rand()%2+1;
+    int choice = std::rand()%3+1;
     switch(choice){
     case 1:{
         Drug *medbag = new MedBag();
@@ -61,7 +61,14 @@ void FallingController::fall(){
         break;
     }
     case 3:{
-
+        Drug *bandage = new Bandage();
+        //int randomX = rand()%(int)(fallingRange.right()-fallingRange.left()-250)+fallingRange.left();
+        bandage->mountToParent(randomX,fallingRange.top());
+        bandage->setScene(parentScene);
+        //ballHand->setBullet();
+        parentScene->addItem(bandage);
+        createdDrug.push_back(bandage);
+        break;
     }
 
 
