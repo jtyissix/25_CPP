@@ -623,7 +623,7 @@ void BattleScene::processPicking() {
     Scene::processPicking();
 
         //auto weapon = findNearestUnmountedWeapon(character->pos(), 150);
-    auto drug = findNearestUnmountedDrug(myfish->pos(), 200);
+    auto drug = findNearestUnmountedDrug(myfish->pos(), 20);
         //auto armor = findNearestUnmountedArmor(character->pos(),300);
 
         if (drug != nullptr){
@@ -660,17 +660,23 @@ Weapon *BattleScene::findNearestUnmountedWeapon(const QPointF &pos, qreal distan
 }
 
 
-Drug *BattleScene::findNearestUnmountedDrug(const QPointF &pos, qreal distance_threshold) {
+Drug* BattleScene::findNearestUnmountedDrug(const QPointF &pos, qreal distance_threshold) {
     Drug *nearest = nullptr;
     qreal minDistance = distance_threshold;
 
     for (QGraphicsItem *item: items()) {
-        if (auto weapon = dynamic_cast<Drug *>(item)) {
-            if (!weapon->getIsPicked()) {
-                qreal distance = QLineF(pos, item->sceneBoundingRect().center()).length();
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    nearest = weapon;
+        if (auto drug = dynamic_cast<Drug*>(item)) {
+            if (!drug->getIsPicked()) {
+                QPointF drugCenter = drug->sceneBoundingRect().center();
+                QPointF fishCenter = pos + QPointF(32, 32);
+
+                qreal dx = (drugCenter.x() - fishCenter.x()) ;
+                qreal dy = (drugCenter.y() - fishCenter.y()) ;
+                qreal distance = qSqrt(dx * dx + dy * dy);
+
+                if (distance < minDistance ) {
+                    minDistance = distance * 50.0;
+                    nearest = drug;
                 }
             }
         }
@@ -1102,7 +1108,7 @@ void BattleScene::checkVictory() {
         }
         
         QTimer::singleShot(100, [this]() {
-            emit gameOver("Victory");
+            emit gameOver("Victory,解锁下一关，获得技能：速度加倍");
         });
     }
 }

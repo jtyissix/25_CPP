@@ -11,10 +11,12 @@
 #include <random>
 #include <QGraphicsScene>
 #include <QDateTime>
+#include <QGraphicsEllipseItem>
+#include <QPropertyAnimation>
 
-Bomb::Bomb(QGraphicsItem *parent) : QGraphicsEllipseItem(0, 0, 40, 40, parent) {
-    setBrush(QBrush(Qt::black));
-    setPen(QPen(Qt::red, 3));
+Bomb::Bomb(QGraphicsItem *parent) : QGraphicsPixmapItem(parent) {
+    // TODO: 替换为你的炸弹图片路径
+    setPixmap(QPixmap(":/Items/mine0.jpg").scaled(40, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     createTime = QDateTime::currentMSecsSinceEpoch();
 }
 
@@ -30,6 +32,13 @@ FallingController2::FallingController2(QObject *parent)
     std::srand(time(0));
     connect(fallingTimer, &QTimer::timeout, this, &FallingController2::fall);
     connect(vanishTimer, &QTimer::timeout, this, &FallingController2::vanish);
+
+    explodePlayer = new QMediaPlayer(this);
+    explodeOutput = new QAudioOutput(this);
+    explodePlayer->setAudioOutput(explodeOutput);
+    // TODO: 替换为你的爆炸音效路径
+    explodePlayer->setSource(QUrl("qrc:/mineexplode.wav"));
+    explodeOutput->setVolume(0.6);
 }
 
 void FallingController2::setScene(QGraphicsScene* scene) {
@@ -52,7 +61,7 @@ void FallingController2::setVanishParams(int vanishInterval){
 void FallingController2::fall(){
     int randomX = rand() % (int)(fallingRange.right() - fallingRange.left() - 250) + fallingRange.left();
     int choice = std::rand() % 4 + 1;
-    
+
     switch(choice){
     case 1:{
         Drug *medbag = new MedBag();
@@ -82,6 +91,10 @@ void FallingController2::fall(){
         Bomb *bomb = new Bomb();
         bomb->setPos(randomX, fallingRange.top());
         bomb->setCreateTime(QDateTime::currentMSecsSinceEpoch());
+
+        qint64 randomDelay = 1000 + (rand() % 3000);
+        bomb->setExplodeTime(bomb->getCreateTime() + randomDelay);
+
         parentScene->addItem(bomb);
         createdBombs.push_back(bomb);
         break;
@@ -93,39 +106,6 @@ void FallingController2::processMovement(){
     if (!parentScene) return;
     qreal deltaTime = 16.67;
 
-    auto it = createdWeapon.begin();
-    while(it != createdWeapon.end()) {
-        Weapon* weapon = *it;
-        if(weapon != nullptr && !weapon->getIsPicked()) {
-            QPointF currentPos = weapon->pos();
-            weapon->applyGravity();
-            QPointF velocity = weapon->getFallingVelocity();
-            QPointF newPos = currentPos + velocity * (deltaTime / 1000.0);
-            
-            if (newPos.x() < fallingRange.left()) {
-                newPos.setX(fallingRange.left());
-                velocity.setX(0);
-                weapon->setFallingVelocity(velocity);
-            } else if (newPos.x() > fallingRange.right()) {
-                newPos.setX(fallingRange.right());
-                velocity.setX(0);
-                weapon->setFallingVelocity(velocity);
-            }
-            
-            if (newPos.y() >= groundLevel) {
-                newPos.setY(groundLevel);
-                weapon->setIsOnGround(true);
-                weapon->setIsFalling(false);
-                weapon->setFallingVelocity(QPointF(0, 0));
-            } else {
-                weapon->setIsOnGround(false);
-            }
-            
-            weapon->setPos(newPos);
-        }
-        ++it;
-    }
-
     auto itD = createdDrug.begin();
     while(itD != createdDrug.end()) {
         Drug* drug = *itD;
@@ -134,7 +114,7 @@ void FallingController2::processMovement(){
             drug->applyGravity();
             QPointF velocity = drug->getFallingVelocity();
             QPointF newPos = currentPos + velocity * (deltaTime / 1000.0);
-            
+
             if (newPos.x() < fallingRange.left()) {
                 newPos.setX(fallingRange.left());
                 velocity.setX(0);
@@ -144,7 +124,7 @@ void FallingController2::processMovement(){
                 velocity.setX(0);
                 drug->setFallingVelocity(velocity);
             }
-            
+
             if (newPos.y() >= groundLevel) {
                 newPos.setY(groundLevel);
                 drug->setIsOnGround(true);
@@ -153,54 +133,22 @@ void FallingController2::processMovement(){
             } else {
                 drug->setIsOnGround(false);
             }
-            
+
             drug->setPos(newPos);
         }
         ++itD;
     }
 
-    auto itA = createdArmor.begin();
-    while(itA != createdArmor.end()) {
-        Armor* armor = *itA;
-        if(armor != nullptr && !armor->getIsPicked()) {
-            QPointF currentPos = armor->pos();
-            armor->applyGravity();
-            QPointF velocity = armor->getFallingVelocity();
-            QPointF newPos = currentPos + velocity * (deltaTime / 1000.0);
-            
-            if (newPos.x() < fallingRange.left()) {
-                newPos.setX(fallingRange.left());
-                velocity.setX(0);
-                armor->setFallingVelocity(velocity);
-            } else if (newPos.x() > fallingRange.right()) {
-                newPos.setX(fallingRange.right());
-                velocity.setX(0);
-                armor->setFallingVelocity(velocity);
-            }
-            
-            if (newPos.y() >= groundLevel) {
-                newPos.setY(groundLevel);
-                armor->setIsOnGround(true);
-                armor->setIsFalling(false);
-                armor->setFallingVelocity(QPointF(0, 0));
-            } else {
-                armor->setIsOnGround(false);
-            }
-            
-            armor->setPos(newPos);
-        }
-        ++itA;
-    }
-    
+    qint64 currentTime = QDateTime::currentMSecsSinceEpoch();
     auto itB = createdBombs.begin();
     while(itB != createdBombs.end()) {
         Bomb* bomb = *itB;
-        if(bomb != nullptr) {
+        if(bomb != nullptr && !bomb->isExploding()) {
             QPointF currentPos = bomb->pos();
             bomb->applyGravity();
             QPointF velocity = bomb->getFallingVelocity();
             QPointF newPos = currentPos + velocity * (deltaTime / 1000.0);
-            
+
             if (newPos.x() < fallingRange.left()) {
                 newPos.setX(fallingRange.left());
                 velocity.setX(0);
@@ -210,7 +158,7 @@ void FallingController2::processMovement(){
                 velocity.setX(0);
                 bomb->setFallingVelocity(velocity);
             }
-            
+
             if (newPos.y() >= groundLevel) {
                 newPos.setY(groundLevel);
                 bomb->setIsOnGround(true);
@@ -219,11 +167,62 @@ void FallingController2::processMovement(){
             } else {
                 bomb->setIsOnGround(false);
             }
-            
+
             bomb->setPos(newPos);
+
+            if (currentTime >= bomb->getExplodeTime()) {
+                bomb->setExploding(true);
+                bomb->setVisible(false);
+                createExplosionEffect(bomb->pos());
+
+                if (explodePlayer->playbackState() == QMediaPlayer::PlayingState) {
+                    explodePlayer->stop();
+                }
+                explodePlayer->setPosition(0);
+                explodePlayer->play();
+            }
         }
         ++itB;
     }
+}
+
+void FallingController2::createExplosionEffect(const QPointF& position) {
+    for (int i = 0; i < 3; ++i) {
+        QGraphicsEllipseItem* ring = new QGraphicsEllipseItem(-20 - i*10, -20 - i*10,
+                                                              40 + i*20, 40 + i*20);
+        int alpha = 200 - i*50;
+        ring->setBrush(QBrush(QColor(255, 100 + i*30, 0, alpha)));
+        ring->setPen(QPen(QColor(255, 200, 0), 2));
+        ring->setPos(position);
+        ring->setZValue(1000 - i);
+        parentScene->addItem(ring);
+
+        QTimer::singleShot(i * 100 + 400, [this, ring]() {
+            if (parentScene && ring->scene() == parentScene) {
+                parentScene->removeItem(ring);
+                delete ring;
+            }
+        });
+    }
+
+    QGraphicsTextItem* explosion = new QGraphicsTextItem("💥");
+    QFont font("Arial", 48);
+    explosion->setFont(font);
+    explosion->setPos(position.x() - 24, position.y() - 24);
+    explosion->setZValue(1001);
+    parentScene->addItem(explosion);
+
+    QPropertyAnimation* fadeAnim = new QPropertyAnimation(explosion, "opacity");
+    fadeAnim->setDuration(500);
+    fadeAnim->setStartValue(1.0);
+    fadeAnim->setEndValue(0.0);
+
+    connect(fadeAnim, &QPropertyAnimation::finished, [this, explosion]() {
+        parentScene->removeItem(explosion);
+        delete explosion;
+    });
+
+    fadeAnim->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
 void FallingController2::setFallingRange(QRectF range){
@@ -232,41 +231,18 @@ void FallingController2::setFallingRange(QRectF range){
 
 void FallingController2::vanish(){
     qint64 currentTime = QDateTime::currentMSecsSinceEpoch();
-    
-    auto it = createdWeapon.begin();
-    int removedCount = 0;
-    
-    while(it != createdWeapon.end()) {
-        Weapon* weapon = *it;
-        if(weapon != nullptr) {
-            bool isExpired = (currentTime - weapon->getCreateTime()) > weaponLifetime;
-            bool isNotPicked = !weapon->getIsPicked();
-            
-            if(isExpired && isNotPicked) {
-                parentScene->removeItem(weapon);
-                delete weapon;
-                it = createdWeapon.erase(it);
-                removedCount++;
-            } else {
-                ++it;
-            }
-        } else {
-            it = createdWeapon.erase(it);
-        }
-    }
-    
+
     auto itD = createdDrug.begin();
     while(itD != createdDrug.end()) {
         Drug* drug = *itD;
         if(drug != nullptr) {
             bool isExpired = (currentTime - drug->getCreateTime()) > weaponLifetime;
             bool isNotPicked = !drug->getIsPicked();
-            
+
             if(isExpired && isNotPicked) {
                 parentScene->removeItem(drug);
                 delete drug;
                 itD = createdDrug.erase(itD);
-                removedCount++;
             } else {
                 ++itD;
             }
@@ -274,38 +250,18 @@ void FallingController2::vanish(){
             itD = createdDrug.erase(itD);
         }
     }
-    
-    auto itA = createdArmor.begin();
-    while(itA != createdArmor.end()) {
-        Armor* armor = *itA;
-        if(armor != nullptr) {
-            bool isExpired = (currentTime - armor->getCreateTime()) > weaponLifetime;
-            bool isNotPicked = !armor->getIsPicked();
-            
-            if(isExpired && isNotPicked) {
-                parentScene->removeItem(armor);
-                delete armor;
-                itA = createdArmor.erase(itA);
-                removedCount++;
-            } else {
-                ++itA;
-            }
-        } else {
-            itA = createdArmor.erase(itA);
-        }
-    }
-    
+
     auto itB = createdBombs.begin();
     while(itB != createdBombs.end()) {
         Bomb* bomb = *itB;
         if(bomb != nullptr) {
-            bool isExpired = (currentTime - bomb->getCreateTime()) > weaponLifetime;
-            
-            if(isExpired) {
+            bool shouldRemove = bomb->isExploding() &&
+                                (currentTime - bomb->getExplodeTime()) > 600;
+
+            if(shouldRemove) {
                 parentScene->removeItem(bomb);
                 delete bomb;
                 itB = createdBombs.erase(itB);
-                removedCount++;
             } else {
                 ++itB;
             }

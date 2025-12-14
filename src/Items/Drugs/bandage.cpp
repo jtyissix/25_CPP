@@ -12,7 +12,7 @@ void Bandage::mountToParent(double x,double y){
     setScale(1.3);
     setPos(x,y);
     if (pixmapItem != nullptr) {
-        pixmapItem->setPos(x, y);
+        pixmapItem->setPos(0, 0);
     }
 }
 

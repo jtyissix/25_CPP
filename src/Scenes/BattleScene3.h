@@ -63,8 +63,8 @@ private:
     QGraphicsTextItem* fishCounterText;
     
     static constexpr qint64 INVINCIBILITY_DURATION = 2000;
-    static constexpr int MAX_LIVES = 3;
-    static constexpr int WIN_FISH_COUNT = 100;
+    static constexpr int MAX_LIVES = 5;
+    static constexpr int WIN_FISH_COUNT = 60;
 };
 
 #endif

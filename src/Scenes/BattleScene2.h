@@ -66,7 +66,7 @@ private:
     
     static constexpr qint64 INVINCIBILITY_DURATION = 2000;
     static constexpr int MAX_LIVES = 3;
-    static constexpr int WIN_FISH_COUNT = 300;
+    static constexpr int WIN_FISH_COUNT = 60;
     static constexpr qint64 TIME_LIMIT = 60000;
 };
 

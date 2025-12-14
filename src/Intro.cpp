@@ -220,7 +220,7 @@ void Intro::onTask1Clicked() {
     QString task =
         "🎯 关卡1任务目标：\n\n"
         "1. 熟悉游戏操作\n"
-        "2. 活下来，吃到100条鱼长大吧！\n"
+        "2. 活下来，吃到60条鱼长大吧！\n"
         "完成后解锁关卡2！";
     showTaskDialog("关卡1 - 任务说明", task);
 }
@@ -228,8 +228,8 @@ void Intro::onTask1Clicked() {
 void Intro::onTask2Clicked() {
     QString task =
         "🎯 关卡2任务目标：\n\n"
-        "1. 没时间了！你只有30秒！\n"
-        "2. 吃到300条鱼搭上进化的末班车\n"
+        "1. 没时间了！你只有60秒！\n"
+        "2. 吃到60条鱼搭上进化的末班车\n"
         "完成后解锁关卡3！";
     showTaskDialog("关卡2 - 任务说明", task);
 }
@@ -238,7 +238,7 @@ void Intro::onTask3Clicked() {
     QString task =
         "🎯 关卡3任务目标：\n\n"
         "1. 艰难险阻！人类抛下地雷\n"
-        "2. 躲避地雷，吃到100条鱼\n"
+        "2. 躲避地雷，吃到60条鱼\n"
         "这是最终挑战！";
     showTaskDialog("关卡3 - 任务说明", task);
 }
@@ -355,7 +355,7 @@ void Intro::onHelpClicked() {
         "<li>小心避开比你大的鱼，你只有3条命</li>"
         "<li>关卡按钮下方有对应任务卡</li>"
         "<li>完成关卡解锁下一关</li>"
-        "<li>药箱能重置生命，胶囊加速移动，实心泡泡让所有鱼都吃不到你</li>"
+        "<li>药箱能重置生命，胶囊加速移动，实心泡泡让所有鱼都吃不到你免伤一次</li>"
         "</ul>";
     
     helpText->setHtml(helpContent);

@@ -37,12 +37,26 @@ void MyGame3::onGameOver(const QString& winner) {
     msgBox.setButtonText(QMessageBox::Yes, "🔄 重新开始");
     msgBox.setButtonText(QMessageBox::No, "❌ 退出游戏");
     msgBox.setStyleSheet(
-        "QMessageBox { background-color: #f0f0f0; font-size: 14px; }"
-        "QMessageBox QLabel { color: #333; font-size: 15px; font-weight: bold; }"
-        "QPushButton { background-color: #4CAF50; color: white; border: none; "
-        "padding: 8px 16px; border-radius: 4px; font-weight: bold; min-width: 80px; }"
-        "QPushButton:hover { background-color: #45a049; }"
-    );
+        "QMessageBox {"
+        "    background-color: #f0f0f0;"
+        "    font-size: 14px;"
+        "}"
+        "QMessageBox QLabel {"
+        "    color: #333;"
+        "    font-weight: bold;"
+        "}"
+        "QPushButton {"
+        "    background-color: #4CAF50;"
+        "    color: white;"
+        "    border: none;"
+        "    padding: 8px 16px;"
+        "    border-radius: 4px;"
+        "    font-weight: bold;"
+        "}"
+        "QPushButton:hover {"
+        "    background-color: #45a049;"
+        "}"
+        );
 
     int result = msgBox.exec();
     if (result == QMessageBox::Yes) {

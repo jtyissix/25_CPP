@@ -31,5 +31,7 @@
         <file>eat.mp3</file>
         <file>Items/background/bg2_level.jpg</file>
         <file>Items/background/bg3.png</file>
+        <file>mineexplode.wav</file>
+        <file>Items/mine0.jpg</file>
     </qresource>
 </RCC>

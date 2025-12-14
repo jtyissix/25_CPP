@@ -109,7 +109,7 @@ private:
     void showScorePopup(const QPointF& position, QString score);
     QGraphicsTextItem* fishCounterText;
     static constexpr int MAX_LIVES = 3;
-    static constexpr int WIN_FISH_COUNT = 200;
+    static constexpr int WIN_FISH_COUNT = 60;
 };
 
 

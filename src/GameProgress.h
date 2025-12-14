@@ -26,8 +26,8 @@ public:
     
     // 检查某个关卡是否已解锁
     bool isLevelUnlocked(int level) const {
-        return true;
-        //return level <= (completedLevel + 1);
+        //return true;
+        return level <= (completedLevel + 1);
     }
     
     // 重置进度

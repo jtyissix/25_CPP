@@ -7,6 +7,7 @@
 #include <QTimer>
 #include <QFont>
 #include <QPropertyAnimation>
+#include <QDebug>
 
 BattleScene2::BattleScene2(QObject *parent) : Scene(parent)
     , gameEnded(false)
@@ -29,7 +30,7 @@ BattleScene2::BattleScene2(QObject *parent) : Scene(parent)
     
     map->scaleToFitScene(this);
     myfish->setPos(sceneRect().left(), map->getFloorHeight());
-    
+    myfish->moveSpeed=0.6;
     setupHealthBars();
     
     eatSoundPlayer = new QMediaPlayer(this);
@@ -249,7 +250,7 @@ void BattleScene2::processMovement() {
 
 void BattleScene2::processPicking() {
     Scene::processPicking();
-    auto drug = findNearestUnmountedDrug(myfish->pos(), 200);
+    auto drug = findNearestUnmountedDrug(myfish->pos(), 20);
     if (drug != nullptr) {
         myfish->pickUpDrug(drug);
         if (dynamic_cast<MedBag*>(drug)) {
@@ -264,19 +265,25 @@ void BattleScene2::processPicking() {
 Drug* BattleScene2::findNearestUnmountedDrug(const QPointF &pos, qreal distance_threshold) {
     Drug *nearest = nullptr;
     qreal minDistance = distance_threshold;
-    
+
     for (QGraphicsItem *item: items()) {
-        if (auto weapon = dynamic_cast<Drug *>(item)) {
-            if (!weapon->getIsPicked()) {
-                qreal distance = QLineF(pos, item->sceneBoundingRect().center()).length();
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    nearest = weapon;
+        if (auto drug = dynamic_cast<Drug*>(item)) {
+            if (!drug->getIsPicked()) {
+                QPointF drugCenter = drug->sceneBoundingRect().center();
+                QPointF fishCenter = pos + QPointF(32, 32);
+
+                qreal dx = (drugCenter.x() - fishCenter.x()) ;
+                qreal dy = (drugCenter.y() - fishCenter.y()) ;
+                qreal distance = qSqrt(dx * dx + dy * dy);
+                qDebug()<<distance;
+                if (distance < minDistance ) {
+                    //minDistance = distance * 50.0;
+                    nearest = drug;
                 }
             }
         }
     }
-    
+
     return nearest;
 }
 
@@ -398,7 +405,7 @@ void BattleScene2::checkVictory() {
         }
         
         QTimer::singleShot(100, [this]() {
-            emit gameOver("Victory! Level 2 Complete!");
+            emit gameOver("Victory!解锁下一关，获得技能：生命增多");
         });
     }
 }
