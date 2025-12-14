@@ -116,6 +116,15 @@ public:
     void setInIce(bool stealth) { inIce = stealth; }
     // 修改可见性处理
     void updateVisibility();
+    void addShield(int count) { shieldCount += count; }
+    bool hasShield() const { return shieldCount > 0; }
+    bool consumeShield() {
+        if (shieldCount > 0) {
+            shieldCount--;
+            return true;
+        }
+        return false;
+    }
 protected:
     Figure* figure;
     Figure* figureKneeDown;
@@ -129,6 +138,7 @@ protected:
     bool facingRight{true};
     bool inStealth{false};
     bool inIce{false};
+    int shieldCount{0};
     // 攻击相关
     qint64 lastAttackTime;
     qint64 lastPillTime{0};

@@ -1179,6 +1179,7 @@ bool BattleScene::isCharacterInAnyIce(Character* character) {
 void BattleScene::checkFishCollision() {
     //if (gameEnded) return;
     if (gameEnded || isInvincible) return;
+
     QRectF myFishBounds = myfish->sceneBoundingRect();
 
     const QList<FishInfo>& allFish = fishGenerator->getAllFish();
@@ -1231,6 +1232,12 @@ void BattleScene::checkFishCollision() {
 
         if (normalizedDistance < 1.5) {
             qDebug() << "MyFish was eaten by Shark!";
+            if (myfish->hasShield() && myfish->consumeShield()) {
+                showScorePopup(myfish->pos(), "免伤");
+                isInvincible = true;
+                lastDamageTime = QDateTime::currentMSecsSinceEpoch();
+                return;
+            }
             takeDamage();
             playEatSound();
 
@@ -1260,6 +1267,12 @@ void BattleScene::checkFishCollision() {
 
         if (normalizedDistance < 1.5) {
             qDebug() << "MyFish was eaten by Midfish!";
+            if (myfish->hasShield() && myfish->consumeShield()) {
+                showScorePopup(myfish->pos(), "免伤");
+                isInvincible = true;
+                lastDamageTime = QDateTime::currentMSecsSinceEpoch();
+                return;
+            }
             takeDamage();
             playEatSound();
 

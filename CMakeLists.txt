@@ -24,6 +24,10 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/GameProgress.h
         src/MyGame.cpp
         src/MyGame.h
+        src/MyGame2.cpp
+        src/MyGame2.h
+        src/MyGame3.cpp
+        src/MyGame3.h
         src/Items/Item.cpp
         src/Items/Item.h
         src/UI/HealthBar.cpp
@@ -54,11 +58,19 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/Scenes/Scene.h
         src/Scenes/BattleScene.cpp
         src/Scenes/BattleScene.h
+        src/Scenes/BattleScene2.cpp
+        src/Scenes/BattleScene2.h
+        src/Scenes/BattleScene3.cpp
+        src/Scenes/BattleScene3.h
         assets/assets.qrc
         src/Items/Maps/Map.cpp
         src/Items/Maps/Map.h
         src/Items/Maps/Battlefield.cpp
         src/Items/Maps/Battlefield.h
+        src/Items/Maps/Battlefield2.cpp
+        src/Items/Maps/Battlefield2.h
+        src/Items/Maps/Battlefield3.cpp
+        src/Items/Maps/Battlefield3.h
         src/Items/Mountable.cpp
         src/Items/Mountable.h
         src/Items/Figure/Figure.h
@@ -74,6 +86,8 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/Items/Figure/figureb_hand.h src/Items/Figure/figureb_hand.cpp
         src/FallingController/fallingcontroller.h
         src/FallingController/fallingcontroller.cpp
+        src/FallingController/fallingcontroller2.h
+        src/FallingController/fallingcontroller2.cpp
         src/Items/fallable.cpp
         src/Items/fallable.h
         src/Items/Weapons/bullet.h src/Items/Weapons/bullet.cpp

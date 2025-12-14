@@ -1,5 +1,7 @@
 #include "Intro.h"
 #include "MyGame.h"
+#include "MyGame2.h"
+#include "MyGame3.h"
 #include "GameProgress.h"
 #include <QPainter>
 #include <QMessageBox>
@@ -272,7 +274,7 @@ void Intro::onLevel3Clicked() {
 void Intro::startLevel(int levelNumber) {
     // 隐藏当前窗口
     hide();
-    
+    if (levelNumber==1){
     // 创建并显示游戏窗口
     MyGame* game = new MyGame(this);
     game->show();
@@ -282,6 +284,31 @@ void Intro::startLevel(int levelNumber) {
         show();
         //game->deleteLater();
     });
+    }
+    else if (levelNumber==2){
+        // 创建并显示游戏窗口
+        MyGame2* game = new MyGame2(this);
+        game->show();
+        //game->setAttribute(Qt::WA_DeleteOnClose);
+        // 当游戏窗口关闭时，重新显示主界面
+        connect(game, &MyGame2::windowClosed, this, [this, game]() {
+            show();
+            //game->deleteLater();
+        });
+    }
+    else{
+
+            // 创建并显示游戏窗口
+            MyGame3* game = new MyGame3(this);
+            game->show();
+            //game->setAttribute(Qt::WA_DeleteOnClose);
+            // 当游戏窗口关闭时，重新显示主界面
+            connect(game, &MyGame3::windowClosed, this, [this, game]() {
+                show();
+                //game->deleteLater();
+            });
+
+    }
 }
 
 void Intro::onHelpClicked() {
